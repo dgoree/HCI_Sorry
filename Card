@@ -1,0 +1,10 @@
+// Card class
+
+public class Card {
+  int id;
+  
+  public static int getId() {
+    return id;
+  }
+  
+}
