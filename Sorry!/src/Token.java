@@ -6,7 +6,7 @@ public class Token {
 	private Color color;
 	
 	public Token(Space space, Color color) {
-		this.space = space;
+		this.space = space.deepCopy();
 		this.color = color;
 	}
 	
@@ -20,7 +20,7 @@ public class Token {
 	}
 
 	public void setSpace(Space space) {
-		this.space = space;
+		this.space = space.deepCopy();
 	}
 
 	public Color getColor() {
