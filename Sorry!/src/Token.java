@@ -1,4 +1,35 @@
+import java.util.ArrayList;
+
 
 public class Token {
+	private Space space;
+	private Color color;
+	
+	public Token(Space space, Color color) {
+		this.space = space;
+		this.color = color;
+	}
+	
+	public ArrayList<Space> getMoves(Card card) {
+		//TODO
+		return null;
+	}
 
+	public Space getSpace() {
+		return space;
+	}
+
+	public void setSpace(Space space) {
+		this.space = space;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	
 }
