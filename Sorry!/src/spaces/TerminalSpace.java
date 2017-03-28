@@ -1,5 +1,11 @@
+package spaces;
+import gameItems.Token;
+
 import java.util.ArrayList;
 import java.util.UUID;
+
+import utilities.Color;
+import utilities.TerminalType;
 
 
 public class TerminalSpace extends Space{

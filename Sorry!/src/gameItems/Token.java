@@ -1,4 +1,8 @@
+package gameItems;
 import java.util.ArrayList;
+
+import spaces.Space;
+import utilities.Color;
 
 
 public class Token {

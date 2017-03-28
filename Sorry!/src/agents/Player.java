@@ -1,3 +1,7 @@
+package agents;
+import gameItems.Token;
+import utilities.Color;
+
 
 public class Player {
 	private Color color;

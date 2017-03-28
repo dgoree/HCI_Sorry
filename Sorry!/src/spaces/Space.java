@@ -1,4 +1,7 @@
+package spaces;
 import java.util.UUID;
+
+import utilities.Color;
 
 
 public class Space {

@@ -1,4 +1,9 @@
+package mvc.model;
+import gameItems.Deck;
+
 import java.util.ArrayList;
+
+import agents.Player;
 
 
 public class GameSystem {

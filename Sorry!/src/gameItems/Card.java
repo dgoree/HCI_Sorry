@@ -1,3 +1,4 @@
+package gameItems;
 
 public class Card {
 	private int number;
