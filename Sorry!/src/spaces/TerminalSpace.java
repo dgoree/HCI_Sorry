@@ -12,6 +12,11 @@ public class TerminalSpace extends Space{
 
 	private ArrayList<Token> tokens;
 	private TerminalType type;
+	
+	//empty constructor
+	public TerminalSpace() {
+		super();
+	}
 
 	//fully customizable
 	public TerminalSpace(Space previous, Space next, Space slideTo, Space safeNext, Color color, TerminalType type) {

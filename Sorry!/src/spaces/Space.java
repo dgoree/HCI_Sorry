@@ -13,6 +13,17 @@ public class Space {
 	protected boolean isSafe;
 	protected UUID id;
 	
+	//empty space (will become populated as more are created
+	public Space() {
+		this.previous = null;
+		this.next = null;
+		this.slideTo = null;
+		this.safeNext = null;
+		this.color = null;
+		this.isSafe = false;
+		this.id = UUID.randomUUID();
+	}
+	
 	//common space
 	public Space(Space previous, Space next) {
 		this.previous = previous.deepCopy();
