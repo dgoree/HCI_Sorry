@@ -1,8 +1,8 @@
 package gameItems;
-import java.util.ArrayList;
-
 import spaces.Space;
+import spaces.TerminalSpace;
 import utilities.Color;
+import utilities.TerminalType;
 
 
 public class Token {
@@ -11,12 +11,15 @@ public class Token {
 	
 	public Token(Space space, Color color) {
 		this.space = space.deepCopy();
-		this.color = color;
+		this.color = color;	
 	}
 	
-	public ArrayList<Space> getMoves(Card card) {
-		//TODO
-		return null;
+	public boolean inStart() {
+		return (getSpace() instanceof TerminalSpace && ((TerminalSpace) space).getType() == TerminalType.START);
+	}
+	
+	public boolean inHome() {
+		return (getSpace() instanceof TerminalSpace && ((TerminalSpace) space).getType() == TerminalType.HOME);
 	}
 
 	public Space getSpace() {
