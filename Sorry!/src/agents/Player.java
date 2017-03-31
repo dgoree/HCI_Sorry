@@ -10,12 +10,14 @@ public class Player {
 	private String name;
 	private Color color;
 	private Token[] tokens;
+	private Space startSpace;
 	private ArrayList<Space> moves;
 	
-	public Player(String name, Color color, Token[] tokens) {
+	public Player(String name, Color color, Token[] tokens, Space startSpace) {
 		this.name = name;
 		this.color = color;
 		this.tokens = tokens;
+		this.startSpace = startSpace;
 	}
 	
 	public void getMoves(ArrayList<Player> players, int cardNumber) {
@@ -33,13 +35,13 @@ public class Player {
 			//move forward 1
 			moves = findSimpleMoves(cardNumber,true);
 			//move from start
-			moves.add(findStartSpace());
+			moves.add(startSpace.getNext());
 			break;
 		case 2:
 			//move forward 2
 			moves = findSimpleMoves(cardNumber,true);
 			//move from start
-			moves.add(findStartSpace());
+			moves.add(startSpace.getNext());
 			break;
 		case 3:
 			//move 3
@@ -89,7 +91,7 @@ public class Player {
 	
 	//TODO
 	public Space findStartSpace() {
-		Space startSpace = new Space();
+		Space startSpace = new Space(null, null);
 		return startSpace;
 	}
 	

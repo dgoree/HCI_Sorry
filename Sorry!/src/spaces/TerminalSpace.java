@@ -15,18 +15,18 @@ public class TerminalSpace extends Space{
 	
 	//empty constructor
 	public TerminalSpace() {
-		super();
+		super(null,null);
 	}
 
 	//fully customizable
-	public TerminalSpace(Space previous, Space next, Space slideTo, Space safeNext, Color color, TerminalType type) {
-		super(previous, next, slideTo, safeNext, color, true);
+	public TerminalSpace(Space previous, Space next, Color color, TerminalType type) {
+		super(previous, next, null, color);
 		this.tokens = new ArrayList<Token>();
 		this.type = type;
 	}
 	
 	public TerminalSpace deepCopy() {
-		TerminalSpace copy = new TerminalSpace(this.previous, this.next, this.slideTo, this.safeNext, this.color, this.type);
+		TerminalSpace copy = new TerminalSpace(this.previous, this.next, this.color, this.type);
 		copy.setTokens(this.tokens);
 		return copy;
 	}

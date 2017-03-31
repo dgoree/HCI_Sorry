@@ -9,56 +9,73 @@ public class Space {
 	protected Space next;
 	protected Space slideTo;
 	protected Space safeNext;
+	protected Space startPrevious;
 	protected Color color;
 	protected boolean isSafe;
 	protected UUID id;
 	
-	//empty space (will become populated as more are created
-	public Space() {
-		this.previous = null;
-		this.next = null;
+	//common space
+	public Space(Space previous, Space next) {
+		if(previous == null) this.previous = null;
+		else this.previous = previous.deepCopy();
+		if(next == null) this.next = null;
+		else this.next = next.deepCopy();
 		this.slideTo = null;
 		this.safeNext = null;
+		this.startPrevious = null;
 		this.color = null;
 		this.isSafe = false;
 		this.id = UUID.randomUUID();
 	}
 	
-	//common space
-	public Space(Space previous, Space next) {
-		this.previous = previous.deepCopy();
-		this.next = next.deepCopy();
+	//safe space
+	public Space(Space previous, Space safeNext, Color color) {
+		if(previous == null) this.previous = null;
+		else this.previous = previous.deepCopy();
+		this.next = null;
 		this.slideTo = null;
-		this.safeNext = null;
-		this.color = null;
-		this.isSafe = false;
+		if(safeNext == null) this.safeNext = null;
+		else this.safeNext = safeNext.deepCopy();
+		this.startPrevious = null;
+		this.color = color;
+		this.isSafe = true;
 		this.id = UUID.randomUUID();
 	}
 	
 	//slide space
 	public Space(Space previous, Space next, Space slideTo, Color color) {
-		this.previous = previous.deepCopy();
-		this.next = next.deepCopy();
-		this.slideTo = slideTo.deepCopy();
+		if(previous == null) this.previous = null;
+		else this.previous = previous.deepCopy();
+		if(next == null) this.next = null;
+		else this.next = next.deepCopy();
+		if(slideTo == null) this.slideTo = null;
+		else this.slideTo = slideTo.deepCopy();
 		this.safeNext = null;
+		this.startPrevious = null;
 		this.color = color;
 		this.isSafe = false;
 		this.id = UUID.randomUUID();
 	}
 	
 	//fully customizable
-	public Space(Space previous, Space next, Space slideTo, Space safeNext, Color color, boolean isSafe) {
-		this.previous = previous.deepCopy();
-		this.next = next.deepCopy();
-		this.slideTo = slideTo.deepCopy();
-		this.safeNext = safeNext.deepCopy();
+	public Space(Space previous, Space next, Space slideTo, Space safeNext, Space startPrevious, Color color, boolean isSafe) {
+		if(previous == null) this.previous = null;
+		else this.previous = previous.deepCopy();
+		if(next == null) this.next = null;
+		else this.next = next.deepCopy();
+		if(slideTo == null) this.slideTo = null;
+		else this.slideTo = slideTo.deepCopy();
+		if(safeNext == null) this.safeNext = null;
+		else this.safeNext = safeNext.deepCopy();
+		if(startPrevious == null) this.startPrevious = null;
+		else this.startPrevious = startPrevious.deepCopy();
 		this.color = color;
 		this.isSafe = isSafe;
 		this.id = UUID.randomUUID();
 	}
 	
 	public Space deepCopy() {
-		Space copy = new Space(this.previous, this.next, this.slideTo, this.safeNext, this.color, this.isSafe);
+		Space copy = new Space(this.previous, this.next, this.slideTo, this.safeNext, this.startPrevious, this.color, this.isSafe);
 		copy.setId(this.id);
 		return copy;
 	}
@@ -82,8 +99,9 @@ public class Space {
 		return next;
 	}
 
-	public void setNext(Space next) {
+	public Space setNext(Space next) {
 		this.next = next.deepCopy();
+		return next;
 	}
 
 	public Space getSlideTo() {
@@ -100,6 +118,14 @@ public class Space {
 
 	public void setSafeNext(Space safeNext) {
 		this.safeNext = safeNext.deepCopy();
+	}
+	
+	public Space getStartPrevious() {
+		return this.startPrevious;
+	}
+	
+	public void setStartPrevious(Space startPrevious) {
+		this.startPrevious = startPrevious;
 	}
 
 	public Color getColor() {
