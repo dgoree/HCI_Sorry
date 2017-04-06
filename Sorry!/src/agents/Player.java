@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import gameItems.Token;
 import spaces.Space;
+import spaces.TerminalSpace;
 import utilities.Color;
 
 
@@ -12,11 +13,10 @@ public class Player {
 	private String name;
 	private Color color;
 	private Token[] tokens;
-	private Space startSpace;
-	private ArrayList<Space> moves;
+	private UUID startSpace;
 	private HashMap<UUID, Space> hashMap;
 	
-	public Player(String name, Color color, Token[] tokens, Space startSpace, HashMap<UUID, Space> hashMap) {
+	public Player(String name, Color color, Token[] tokens, UUID startSpace, HashMap<UUID, Space> hashMap) {
 		this.name = name;
 		this.color = color;
 		this.tokens = tokens;
@@ -24,136 +24,145 @@ public class Player {
 		this.hashMap = hashMap;
 	}
 	
-	public void getMoves(ArrayList<Player> players, int cardNumber) {
-		moves = new ArrayList<Space>();
+	public void calcMoves(ArrayList<Player> players, int cardNumber) {
 		
-		switch(cardNumber) {
-		case 0: //sorry card
-			//requires a token in start
-			if(tokenInStart()) {
-				//move to any non-safe space containing an opponent's token
-				moves = findOpponentTokens(players);
+		//sevens can't be handled individually
+		if(cardNumber == 7) {
+			findSplitMoves();
+		}
+		
+		else for(Token t:tokens) {
+			switch(cardNumber) {
+			case 0: //sorry card
+				//requires token to be in start
+				if(t.getSpaceID() == startSpace) {
+					//move to any non-safe space containing an opponent's token
+					t.setMoves(findOpponentTokens(players));
+				}
+				break;
+			case 1:
+				//move forward 1
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				//move from start
+				if(t.getSpaceID() == startSpace) {
+					t.addMove(hashMap.get(t.getSpaceID()).getNextID());
+				}
+				break;
+			case 2:
+				//move forward 2
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				//move from start
+				if(t.getSpaceID() == startSpace) {
+					t.addMove(hashMap.get(t.getSpaceID()).getNextID());
+				}
+				break;
+			case 3:
+				//move 3
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				break;
+			case 4:
+				//back 4
+				t.setMoves(findSimpleMoves(t,cardNumber,false));
+				break;
+			case 5:
+				//move 5
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				break;
+			case 8:
+				//move 8
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				break;
+			case 10:
+				//move 10
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				//move back 1
+				t.addMoves(findSimpleMoves(t, 1, false));
+				break;
+			case 11:
+				//move 11
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				//swap with opponent (requires token not to be in start)
+				if(t.getSpaceID() != startSpace) {
+					t.addMoves(findOpponentTokens(players));
+				}
+				break;
+			case 12:
+				//move 12
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
+				break;
 			}
-			break;
-		case 1:
-			//move forward 1
-			moves = findSimpleMoves(cardNumber,true);
-			//move from start
-			moves.add(startSpace.getNext());
-			break;
-		case 2:
-			//move forward 2
-			moves = findSimpleMoves(cardNumber,true);
-			//move from start
-			moves.add(startSpace.getNext());
-			break;
-		case 3:
-			//move 3
-			moves = findSimpleMoves(cardNumber,true);
-			break;
-		case 4:
-			//back 4
-			moves = findSimpleMoves(cardNumber,false);
-			break;
-		case 5:
-			//move 5
-			moves = findSimpleMoves(cardNumber,true);
-			break;
-		case 7:
-			//move one or two tokens 7 spaces total - will require extra logic
-			moves = findSplitMoves();
-			break;
-		case 8:
-			//move 8
-			moves = findSimpleMoves(cardNumber,true);
-			break;
-		case 10:
-			//move 10
-			moves = findSimpleMoves(cardNumber,true);
-			//move back 1
-			moves.addAll(0, findSimpleMoves(1, false));
-			break;
-		case 11:
-			//swap with opponent
-			moves = findOpponentTokens(players);
-			//move 11
-			moves.addAll(0,findSimpleMoves(cardNumber,true));
-			break;
-		case 12:
-			//move 12
-			moves = findSimpleMoves(cardNumber,true);
-			break;
 		}
-	}
-	
-	public boolean tokenInStart() {
-		for(Token t: tokens) {
-			if(t.inStart()) return true;
-		}
-		return false;
 	}
 	
 	//direction: true = forwards, false = backwards
-	public ArrayList<Space> findSimpleMoves(int numMoves, boolean direction) {
-		Space space;
-		ArrayList<Space> moveOptions = new ArrayList<Space>();
-		//iterate through all tokens
-		for(Token t:tokens) {
-			space = t.getSpace();
-			//forwards
-			if(direction) {
-				for(int moves=0;moves<numMoves;moves++) {
-					if(space.getSafeNextID() != null && hashMap.get(space.getSafeNextID()).getColor() == color) {
-						space = hashMap.get(space.getSafeNextID());
-					}
-					else {
-						space = hashMap.get(space.getNextID());
-					}
+	public ArrayList<UUID> findSimpleMoves(Token t, int numMoves, boolean direction) {
+		Space space = hashMap.get(t.getSpaceID());
+		ArrayList<UUID> moveOptions = new ArrayList<UUID>();
+		if(space instanceof TerminalSpace) return moveOptions; //can't move if in start or home
+		int count = 0;
+		//forwards
+		if(direction) {
+			for(int moves=0;moves<numMoves;moves++) {
+				if(space.getSafeNextID() != null && hashMap.get(space.getSafeNextID()).getColor() == color) {
+					space = hashMap.get(space.getSafeNextID());
+					count++;
+				}
+				else if(space.getNextID() != null) {
+					space = hashMap.get(space.getNextID());
+					count++;
 				}
 			}
-			//backwards
-			else {
-				for(int moves=0;moves<numMoves;moves++) {
+		}
+		//backwards
+		else {
+			for(int moves=0;moves<numMoves;moves++) {
+				if(space.getPreviousID() != null) {
 					space = hashMap.get(space.getPreviousID());
+					count++;
 				}
 			}
-			//determine if end result is a legal destination
-			if(space != null && !findMyTokens().contains(space)) {
-				moveOptions.add(space);
-			}
+		}
+		//determine if end result is a legal destination: must not have reached a null space and either:
+		//the space must not contain another of this player's tokens, or
+		//the space must be the start of a slide of a different color
+		if(count == numMoves &&
+		   space != null &&
+		   (!findMyTokens().contains(space.getId()) || (space.getSlideToID() != null && space.getColor() != color))) {
+			moveOptions.add(space.getId());
 		}
 		return moveOptions;
 	}
 	
-	public ArrayList<Space> findSplitMoves() {
-		ArrayList<Space> moveOptions = new ArrayList<Space>();
-		//TODO		
-		return moveOptions;
+	//TODO
+	public void findSplitMoves() {
+		for(Token t: tokens) {
+			t.setMoves(new ArrayList<UUID>());
+		}
 	}
 	
-	public ArrayList<Space> findMyTokens() {
-		ArrayList<Space> tokenLocs = new ArrayList<Space>();
+	public ArrayList<UUID> findMyTokens() {
+		ArrayList<UUID> tokenIDs = new ArrayList<UUID>();
 		for(int token=0;token<4;token++) {
-			tokenLocs.add(tokens[token].getSpace());
+			tokenIDs.add(tokens[token].getSpaceID());
 		}
-		return tokenLocs;
+		return tokenIDs;
 	}
 	
-	public ArrayList<Space> findOpponentTokens(ArrayList<Player> players) {
-		ArrayList<Space> tokenLocs = new ArrayList<Space>();
-		Space tempSpace;
+	public ArrayList<UUID> findOpponentTokens(ArrayList<Player> players) {
+		ArrayList<UUID> tokenIDs = new ArrayList<UUID>();
+		UUID tempID;
 		for(int player=0;player<4;player++) {
 			//don't look for tokens of the same color
 			if(Color.values()[player] == color) continue;
 			//find all non-safe token spaces
 			for(int token=0;token<4;token++) {
-				tempSpace = players.get(player).getTokens()[token].getSpace();
-				if(!tempSpace.isSafe()) {
-					tokenLocs.add(tempSpace);
+				tempID = players.get(player).getTokens()[token].getSpaceID();
+				if(!hashMap.get(tempID).isSafe()) {
+					tokenIDs.add(tempID);
 				}
 			}
 		}
-		return tokenLocs;
+		return tokenIDs;
 	}
 	
 	public String getName() {
@@ -179,7 +188,4 @@ public class Player {
 	public void setTokens(Token[] tokens) {
 		this.tokens = tokens;
 	}
-	
-	
-
 }

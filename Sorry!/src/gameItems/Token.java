@@ -1,4 +1,7 @@
 package gameItems;
+import java.util.ArrayList;
+import java.util.UUID;
+
 import spaces.Space;
 import spaces.TerminalSpace;
 import utilities.Color;
@@ -6,28 +9,21 @@ import utilities.TerminalType;
 
 
 public class Token {
-	private Space space;
+	private UUID spaceID;
 	private Color color;
+	private ArrayList<UUID> moves;
 	
-	public Token(Space space, Color color) {
-		this.space = space.deepCopy();
+	public Token(UUID spaceID, Color color) {
+		this.spaceID = spaceID;
 		this.color = color;	
 	}
-	
-	public boolean inStart() {
-		return (getSpace() instanceof TerminalSpace && ((TerminalSpace) space).getType() == TerminalType.START);
-	}
-	
-	public boolean inHome() {
-		return (getSpace() instanceof TerminalSpace && ((TerminalSpace) space).getType() == TerminalType.HOME);
+
+	public UUID getSpaceID() {
+		return spaceID;
 	}
 
-	public Space getSpace() {
-		return space;
-	}
-
-	public void setSpace(Space space) {
-		this.space = space.deepCopy();
+	public void setSpaceID(UUID spaceID) {
+		this.spaceID = spaceID;
 	}
 
 	public Color getColor() {
@@ -38,5 +34,20 @@ public class Token {
 		this.color = color;
 	}
 	
+	public ArrayList<UUID> getMoves() {
+		return moves;
+	}
+	
+	public void setMoves(ArrayList<UUID> moves) {
+		this.moves = moves;
+	}
+	
+	public void addMove(UUID move) {
+		this.moves.add(move);
+	}
+	
+	public void addMoves(ArrayList<UUID> newMoves) {
+		this.moves.addAll(newMoves);
+	}
 	
 }

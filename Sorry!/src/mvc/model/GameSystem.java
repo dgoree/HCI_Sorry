@@ -25,7 +25,7 @@ public class GameSystem {
 	
 	public GameSystem() {
 		buildGameBoard();
-		//playGame(); //disabled for now because there are errors in findSimpleMoves()
+		playGame(); //disabled for now because there are errors in findSimpleMoves()
 	}
 	
 	public void buildGameBoard() {
@@ -186,9 +186,9 @@ public class GameSystem {
 		
 		for(int player=0;player<4;player++) {
 			for(int token=0;token<4;token++) {
-				tokens[player][token] = new Token(hashMap.get(startSpaces[player]), Color.values()[player]);
+				tokens[player][token] = new Token(startSpaces[player], Color.values()[player]);
 			}
-			p = new Player(playerNames[player], Color.values()[player], tokens[player], hashMap.get(startSpaces[player]), hashMap);
+			p = new Player(playerNames[player], Color.values()[player], tokens[player], startSpaces[player], hashMap);
 			players.add(p);
 		}
 	}
@@ -199,31 +199,75 @@ public class GameSystem {
 	
 	//return true if the game is over
 	public boolean takeTurn() {
-		//draw a card
+		//draw a card and manage the deck
 		Card thisCard = stock.remove(0);
 		discard.add(thisCard);
 		if(stock.isEmpty()) {
-			stock = discard;
-			stock.shuffle();
+			stock = new Deck(true);
 			discard.clear();
 		}
 		
 		//calculate all available move options
-		for(int token=0;token<4;token++) {
-			players.get(turn).getMoves(players, thisCard.getNumber());
-		}
+		players.get(turn).calcMoves(players, thisCard.getNumber());
 		
 		//TODO: display options and move the token of the player's choosing
+		ArrayList<UUID> moveOptions;
+		for(int token=0;token<4;token++) {
+			moveOptions = players.get(turn).getTokens()[token].getMoves();
+			
+			//TODO: display options and get user choice
+			
+			//for now: move first available token
+			if(!moveOptions.isEmpty()) {
+				moveToken(token, moveOptions.get(0));
+				break;
+			}
+		}
 		
 		//end game, or go to next turn
-		if(checkGameOver(turn)) {
-			//TODO: display some kind of congratulatory message
+		if(checkGameOver()) {
+			System.out.println("Player " + turn + " wins!"); //temp; should be done via UI
 			return true;
 		}
+		//give this player another turn if a 2 is played
+		else if(thisCard.getNumber() == 2) {
+			return false;
+		}
+		//otherwise, go to next player's turn
 		else if(++turn >= 4) {
 			turn=0;
 		}
 		return false;
+	}
+	
+	public void moveToken(int t, UUID destination) {
+		//move token to destination
+		players.get(turn).getTokens()[t].setSpaceID(destination);
+		//remove any players occupying this space
+		evict(destination);
+		//perform slide if necessary
+		UUID slideToID = hashMap.get(destination).getSlideToID(); 
+		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
+			while(destination != slideToID) {
+				destination = hashMap.get(destination).getNextID();
+				evict(destination);
+			}
+		}
+		//move token to end of slide
+		players.get(turn).getTokens()[t].setSpaceID(destination);
+	}
+	
+	//remove any tokens occupying the space with this id.
+	//Note: logic in calcMoves() should prevent a player from landing on his own pawn, except on slides.
+	public void evict(UUID id) {
+		for(int player=0; player<4; player++) {
+			for(int tok=0; tok<4; tok++) {
+				//bump back to start if occupied
+				if(players.get(player).getTokens()[tok].getSpaceID() == id) {
+					players.get(player).getTokens()[tok].setSpaceID(startSpaces[player]);
+				}
+			}
+		}
 	}
 
 	public int getTurn() {
@@ -251,13 +295,27 @@ public class GameSystem {
 	}
 	
 	//the game is over if all of this player's tokens are in home
-	public boolean checkGameOver(int player) {
+	public boolean checkGameOver() {
 		boolean gameOver = true;
 		Token t;
+		int debug_s = 0; //number of tokens in start
+		int debug_h = 0; //number of tokens in home
 		for(int token=0;token<4;token++) {
-			t = players.get(player).getTokens()[token]; 
-			gameOver = t.inHome();
+			t = players.get(turn).getTokens()[token]; 
+			if(!inHome(t)) {
+				gameOver = false;
+			}
+			else debug_h++;
+			
+			//debug
+			if(t.getSpaceID() == startSpaces[turn]) debug_s++;
 		}
+		//if(debug_s < 2) System.out.println("P" + turn + "S: " + debug_s);
+		if(debug_h > 0) System.out.println("P" + turn + "H: " + debug_h);
 		return gameOver;
+	}
+	
+	public boolean inHome(Token t) {
+		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME));		
 	}
 }
