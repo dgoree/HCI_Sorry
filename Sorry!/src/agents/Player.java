@@ -1,5 +1,7 @@
 package agents;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import gameItems.Token;
 import spaces.Space;
@@ -12,12 +14,14 @@ public class Player {
 	private Token[] tokens;
 	private Space startSpace;
 	private ArrayList<Space> moves;
+	private HashMap<UUID, Space> hashMap;
 	
-	public Player(String name, Color color, Token[] tokens, Space startSpace) {
+	public Player(String name, Color color, Token[] tokens, Space startSpace, HashMap<UUID, Space> hashMap) {
 		this.name = name;
 		this.color = color;
 		this.tokens = tokens;
 		this.startSpace = startSpace;
+		this.hashMap = hashMap;
 	}
 	
 	public void getMoves(ArrayList<Player> players, int cardNumber) {
@@ -89,12 +93,6 @@ public class Player {
 		return false;
 	}
 	
-	//TODO
-	public Space findStartSpace() {
-		Space startSpace = new Space(null, null);
-		return startSpace;
-	}
-	
 	//direction: true = forwards, false = backwards
 	public ArrayList<Space> findSimpleMoves(int numMoves, boolean direction) {
 		Space space;
@@ -105,18 +103,18 @@ public class Player {
 			//forwards
 			if(direction) {
 				for(int moves=0;moves<numMoves;moves++) {
-					if(space.getSafeNext() != null && space.getSafeNext().getColor() == color) {
-						space = space.getSafeNext();
+					if(space.getSafeNextID() != null && hashMap.get(space.getSafeNextID()).getColor() == color) {
+						space = hashMap.get(space.getSafeNextID());
 					}
 					else {
-						space = space.getNext();
+						space = hashMap.get(space.getNextID());
 					}
 				}
 			}
 			//backwards
 			else {
 				for(int moves=0;moves<numMoves;moves++) {
-					space = space.getPrevious();
+					space = hashMap.get(space.getPreviousID());
 				}
 			}
 			//determine if end result is a legal destination
