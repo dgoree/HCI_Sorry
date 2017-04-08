@@ -1,10 +1,15 @@
 package spaces;
+import java.awt.Dimension;
 import java.util.UUID;
+
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
 
 import utilities.Color;
 
 
-public class Space {
+public class Space extends JLabel
+{
 	protected Space previous;
 	protected Space next;
 	protected Space slideTo;
@@ -19,6 +24,11 @@ public class Space {
 	protected boolean isSafe;
 	protected UUID id;
 	
+	//Constants needed for GUI
+	private static final int SIDE_LENGTH = 40;
+	private static final java.awt.Color NAVY = new java.awt.Color(0, 0, 128);
+	private static final int BORDER_WEIGHT = 2;
+	
 	//common space
 	public Space(Space previous, Space next) {
 		if(previous == null) this.previous = null;
@@ -31,6 +41,8 @@ public class Space {
 		this.color = null;
 		this.isSafe = false;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
 	}
 	
 	//common space; bool added to keep compiler happy for now
@@ -43,6 +55,8 @@ public class Space {
 		this.color = null;
 		this.isSafe = false;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
 	}
 	
 	//safe space
@@ -57,6 +71,8 @@ public class Space {
 		this.color = color;
 		this.isSafe = true;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
 	}
 	
 	//safe space
@@ -68,6 +84,8 @@ public class Space {
 		this.color = color;
 		this.isSafe = true;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
 	}
 	
 	//slide space
@@ -83,6 +101,8 @@ public class Space {
 		this.color = color;
 		this.isSafe = false;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
 	}
 	
 	//fully customizable
@@ -100,6 +120,26 @@ public class Space {
 		this.color = color;
 		this.isSafe = isSafe;
 		this.id = UUID.randomUUID();
+		
+		initVisualProperties();
+	}
+	
+	/**
+	 * Set size, border, and fill of common spaces
+	 */
+	private void initVisualProperties()
+	{
+		//Set size
+		setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+
+		//Set border
+		setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+		
+		//Set fill
+		setBackground(java.awt.Color.WHITE);
+		setOpaque(true);
 	}
 	
 	public Space deepCopy() {
