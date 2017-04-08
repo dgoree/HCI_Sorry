@@ -13,6 +13,7 @@ public class TerminalSpace extends Space{
 	private ArrayList<Token> tokens;
 	private TerminalType type;
 	
+	
 	//empty constructor
 	public TerminalSpace() {
 		super(null,null);
@@ -26,12 +27,12 @@ public class TerminalSpace extends Space{
 	}
 	
 	//fully customizable - boolean added to keep compiler happy
-		public TerminalSpace(UUID previous, UUID next, Color color, TerminalType type, boolean b) {
-			super(previous, next, color);
-			this.tokens = new ArrayList<Token>();
-			this.type = type;
-		}
-	
+	public TerminalSpace(UUID previous, UUID next, Color color, TerminalType type, boolean b) {
+		super(previous, next, color);
+		this.tokens = new ArrayList<Token>();
+		this.type = type;
+	}
+		
 	public TerminalSpace deepCopy() {
 		TerminalSpace copy = new TerminalSpace(this.previous, this.next, this.color, this.type);
 		copy.setTokens(this.tokens);

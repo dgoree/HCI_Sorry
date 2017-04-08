@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 
 import spaces.Space;
+import spaces.TerminalSpace;
+import utilities.TerminalType;
 
 public class GameBoard extends JPanel
 {	
@@ -108,7 +110,7 @@ public class GameBoard extends JPanel
 	 */
 	private void initializeStart(Color color, int gridX, int gridY)
 	{
-		Space start = new Space(null, null);
+		TerminalSpace start = new TerminalSpace(null, null, null, TerminalType.START);
 		
 		//Set "START" size and color
 		start.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
@@ -190,7 +192,7 @@ public class GameBoard extends JPanel
 	 */
 	private void initializeHome(Color color, int gridX, int gridY)
 	{
-		Space home = new Space(null, null);
+		TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
 		
 		//Set "HOME" size and color
 		home.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
