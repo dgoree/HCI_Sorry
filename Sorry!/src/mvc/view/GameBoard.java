@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import spaces.Space;
@@ -32,6 +35,7 @@ public class GameBoard extends JPanel
 	 */
 	private void initialize() 
 	{	
+		initializeSlides();
 		initializeSpaces();
 
 		//Yellow
@@ -53,6 +57,164 @@ public class GameBoard extends JPanel
 		initializeStart(Color.BLUE, 1, 10); //upper-left corner (1, 10)
 		initializeSafetyZone(Color.BLUE, 1, 13, 5, 13); //(1, 13) to (5, 13)
 		initializeHome(Color.BLUE, 6, 12); //upper-left corner (6, 12)
+	}
+	
+	/**
+	 * Initialize slide images
+	 */
+	private void initializeSlides()
+	{
+		//Yellow Slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("yellowSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 0;
+			c.gridwidth = 4;
+			add(slide, c);
+		}
+		
+		//Yellow slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("yellowSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 9;
+			c.gridy = 0;
+			c.gridwidth = 5;
+			add(slide, c);
+		}
+		
+		//Green slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("greenSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 15;
+			c.gridy = 1;
+			c.gridheight = 4;
+			add(slide, c);
+		}
+		
+		//Green slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("greenSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 15;
+			c.gridy = 9;
+			c.gridheight = 5;
+			add(slide, c);
+		}
+		
+		//Red Slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("redSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 11;
+			c.gridy = 15;
+			c.gridwidth = 4;
+			add(slide, c);
+		}
+		
+		//Red slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("redSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 2;
+			c.gridy = 15;
+			c.gridwidth = 5;
+			add(slide, c);
+		}
+		
+		//Blue slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("blueSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 11;
+			c.gridheight = 4;
+			add(slide, c);
+		}
+		
+		//Blue slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("blueSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 2;
+			c.gridheight = 5;
+			add(slide, c);
+		}
 	}
 	
 	/**
