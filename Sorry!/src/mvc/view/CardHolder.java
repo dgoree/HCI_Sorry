@@ -67,10 +67,10 @@ public class CardHolder extends JLabel implements Listener
 	public void updated()
 	{
 		//ask whether to display a card or the button 
-		boolean y = gameSystem.getShowCard();
+		boolean showCard = gameSystem.getShowCard();
 		
 		//if it's the button...  
-		if(!y)
+		if(!showCard)
 		{
 			this.removeAll();
 			this.add(drawCard);
