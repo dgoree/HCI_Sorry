@@ -9,6 +9,7 @@ import utilities.TerminalType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import agents.Player;
@@ -22,6 +23,9 @@ public class GameSystem {
 	private Deck discard;
 	private UUID[] startSpaces = new UUID[4];
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
+	private Card thisCard;
+	private boolean showCard;
+	private List<Listener> listeners = new ArrayList<Listener>();
 	
 	public GameSystem() {
 		buildGameBoard();
@@ -197,10 +201,19 @@ public class GameSystem {
 		this.players = players;
 	}
 	
-	//return true if the game is over
+	
+	/**
+	*  Return true if the game is over
+	*/
 	public boolean takeTurn() {
 		//draw a card and manage the deck
-		Card thisCard = stock.remove(0);
+		thisCard = stock.remove(0);
+		//Maria made a couple changes here to make the card number more easily accessible to the view.
+		//I made thisCard a class variable with a getter.
+		showCard = true;
+		notifyListeners();//This is Maria's addition.  We might want it further down in the method, 
+							//but I stuck it here for now.
+
 		discard.add(thisCard);
 		if(stock.isEmpty()) {
 			stock = new Deck(true);
@@ -223,6 +236,8 @@ public class GameSystem {
 				break;
 			}
 		}
+		
+		showCard = false;
 		
 		//end game, or go to next turn
 		if(checkGameOver()) {
@@ -317,5 +332,30 @@ public class GameSystem {
 	
 	public boolean inHome(Token t) {
 		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME));		
+	}
+	
+	public int getCardNum()
+	{
+		return thisCard.getNumber();
+	}
+	
+	//This method tells the view whether to show a button or to show the card
+	public boolean getShowCard()
+	{
+		return showCard;
+	}
+	
+	public void addListener(final Listener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	//Tells view to update
+	public void notifyListeners()
+	{
+		for(final Listener listener:listeners)
+		{
+			listener.updated();
+		}
 	}
 }
