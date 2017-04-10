@@ -1,27 +1,22 @@
 package mvc.view;
 
-import java.awt.GridBagLayout;
-import java.io.IOException;
-import java.awt.GridBagConstraints;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import mvc.controller.Controller;
 import mvc.model.GameSystem;
+import spaces.Space;
+import spaces.TerminalSpace;
+import utilities.TerminalType;
 
-/**
- * GameBoard creates all visual elements of the game board. 
- * 
- * The game board is designed to closely replicate the actual Sorry! board and 
- * includes elements such as the START, safety zone, HOME, and slides 
- * for each of the four colors.
- * 
- * In the GameBoard coordinate plane, the location of the space in the 
- * upper-left corner of the game board is defined as (0,0).
- * 
- * @author ryanbrowning
- */
 public class GameBoard extends JPanel
 {	
 	//The number of spaces along a side of the square game board
@@ -37,16 +32,18 @@ public class GameBoard extends JPanel
 		this.gameSystem = gameSystem;
 		setLayout(new GridBagLayout());
 		
-		initialize(gameSystem, controller);
+		initialize(gameSystem, controller);	
 	}
-
+	
+	
 	/**
 	 * Initializes the visual elements of the game board, including spaces and
 	 * the START, safety zone, and HOME for each of the four colors 
 	 * @throws IOException 
 	 */
-	private void initialize(GameSystem gameSystem, Controller controller) throws IOException 
+	private void initialize(final GameSystem gameSystem, final Controller controller) throws IOException 
 	{	
+		initializeSlides();
 		initializeSpaces();
 		initializeCardHolder(gameSystem, controller);//Maria's addition
 
@@ -71,7 +68,164 @@ public class GameBoard extends JPanel
 		initializeHome(Color.BLUE, 6, 12); //upper-left corner (6, 12)
 	}
 	
-
+	/**
+	 * Initialize slide images
+	 */
+	private void initializeSlides()
+	{
+		//Yellow Slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("yellowSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 0;
+			c.gridwidth = 4;
+			add(slide, c);
+		}
+		
+		//Yellow slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("yellowSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 9;
+			c.gridy = 0;
+			c.gridwidth = 5;
+			add(slide, c);
+		}
+		
+		//Green slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("greenSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 15;
+			c.gridy = 1;
+			c.gridheight = 4;
+			add(slide, c);
+		}
+		
+		//Green slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("greenSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 15;
+			c.gridy = 9;
+			c.gridheight = 5;
+			add(slide, c);
+		}
+		
+		//Red Slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("redSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 11;
+			c.gridy = 15;
+			c.gridwidth = 4;
+			add(slide, c);
+		}
+		
+		//Red slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("redSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 2;
+			c.gridy = 15;
+			c.gridwidth = 5;
+			add(slide, c);
+		}
+		
+		//Blue slide (4 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("blueSlide4.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 11;
+			c.gridheight = 4;
+			add(slide, c);
+		}
+		
+		//Blue slide (5 spaces)
+		{
+			Space slide = new Space(null, null);
+			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setOpaque(false);
+			
+			ImageIcon icon = new ImageIcon("blueSlide5.png");
+			slide.setIcon(icon);
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setHorizontalAlignment(JLabel.CENTER);
+			slide.setVerticalAlignment(JLabel.CENTER);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 2;
+			c.gridheight = 5;
+			add(slide, c);
+		}
+	}
+	
 	/**
 	 * Initializes the spaces along the perimeter of the game board
 	 */
@@ -80,7 +234,7 @@ public class GameBoard extends JPanel
 		//Top row
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
-			Space space = new Space();
+			Space space = new Space(null, null);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = i;
 			c.gridy = 0;
@@ -90,7 +244,7 @@ public class GameBoard extends JPanel
 		//Right column
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
-			Space space = new Space();
+			Space space = new Space(null, null);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = (NUM_SPACES_PER_SIDE - 1);
 			c.gridy = i;
@@ -100,7 +254,7 @@ public class GameBoard extends JPanel
 		//Bottom row
 		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
 		{
-			Space space = new Space();
+			Space space = new Space(null, null);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = i;
 			c.gridy = (NUM_SPACES_PER_SIDE - 1);
@@ -110,7 +264,7 @@ public class GameBoard extends JPanel
 		//Left column
 		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
 		{
-			Space space = new Space();
+			Space space = new Space(null, null);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = i;
@@ -148,7 +302,7 @@ public class GameBoard extends JPanel
 	 */
 	private void initializeStart(Color color, int gridX, int gridY)
 	{
-		Space start = new Space();
+		TerminalSpace start = new TerminalSpace(null, null, null, TerminalType.START);
 		
 		//Set "START" size and color
 		start.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
@@ -184,7 +338,7 @@ public class GameBoard extends JPanel
 			//For each safety zone space
 			for (int i = y1; i <= y2; ++i)
 			{
-				Space safe = new Space();
+				Space safe = new Space(null, null);
 				
 				//Set color
 				safe.setBackground(color);
@@ -205,7 +359,7 @@ public class GameBoard extends JPanel
 			//For each safety zone space
 			for (int i = x1; i <= x2; ++i)
 			{
-				Space safe = new Space();
+				Space safe = new Space(null, null);
 				
 				//Set color
 				safe.setBackground(color);
@@ -230,7 +384,7 @@ public class GameBoard extends JPanel
 	 */
 	private void initializeHome(Color color, int gridX, int gridY)
 	{
-		Space home = new Space();
+		TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
 		
 		//Set "HOME" size and color
 		home.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
@@ -247,5 +401,4 @@ public class GameBoard extends JPanel
 		
 		add(home, c);	
 	}
-	
 }
