@@ -28,7 +28,7 @@ public class TerminalSpace extends Space{
 	
 	//fully customizable - boolean added to keep compiler happy
 	public TerminalSpace(UUID previous, UUID next, Color color, TerminalType type, boolean b) {
-		super(previous, next, color);
+		super(previous, next, color, b);
 		this.tokens = new ArrayList<Token>();
 		this.type = type;
 	}

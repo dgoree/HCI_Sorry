@@ -29,7 +29,7 @@ public class GameSystem {
 	
 	public GameSystem() {
 		buildGameBoard();
-		playGame(); //disabled for now because there are errors in findSimpleMoves()
+		//playGame(); //used for debug
 	}
 	
 	public void buildGameBoard() {
@@ -54,7 +54,7 @@ public class GameSystem {
 		
 		//create safe zones
 		//red
-		Space firstSafeRed = new Space(null, null, true);
+		Space firstSafeRed = new Space(null, null, Color.RED, true);
 		hashMap.put(firstSafeRed.getId(), firstSafeRed);
 		Space currentSafe = addSafeSpace(firstSafeRed.getId(), null, Color.RED);
 		for(int i=0;i<3;i++) {
@@ -65,7 +65,7 @@ public class GameSystem {
 		hashMap.put(homeRed.getId(), homeRed);
 		
 		//blue
-		Space firstSafeBlue = new Space(null, null, true);
+		Space firstSafeBlue = new Space(null, null, Color.BLUE, true);
 		hashMap.put(firstSafeBlue.getId(), firstSafeBlue);
 		currentSafe = addSafeSpace(firstSafeBlue.getId(), null, Color.BLUE);
 		for(int i=0;i<3;i++) {
@@ -76,7 +76,7 @@ public class GameSystem {
 		hashMap.put(homeBlue.getId(), homeBlue);
 		
 		//yellow
-		Space firstSafeYellow = new Space(null, null, true);
+		Space firstSafeYellow = new Space(null, null, Color.YELLOW, true);
 		hashMap.put(firstSafeYellow.getId(), firstSafeYellow);
 		currentSafe = addSafeSpace(firstSafeYellow.getId(), null, Color.YELLOW);
 		for(int i=0;i<3;i++) {
@@ -87,7 +87,7 @@ public class GameSystem {
 		hashMap.put(homeYellow.getId(), homeYellow);
 		
 		//green
-		Space firstSafeGreen = new Space(null, null, true);
+		Space firstSafeGreen = new Space(null, null, Color.GREEN, true);
 		hashMap.put(firstSafeGreen.getId(), firstSafeGreen);
 		currentSafe = addSafeSpace(firstSafeGreen.getId(), null, Color.GREEN);
 		for(int i=0;i<3;i++) {
@@ -108,6 +108,7 @@ public class GameSystem {
 			currentSpace.setSlideToID(hashMap.get(hashMap.get(hashMap.get(currentSpace.getNextID()).getNextID()).getNextID()).getId());
 			//fork to safe zone
 			currentSpace = hashMap.get(currentSpace.getNextID());
+			//System.out.println("   "+currentSpace.getId());
 			currentSpace.setSafeNextID(safeZoneStartSpaces[color]);
 			hashMap.get(safeZoneStartSpaces[color]).setPreviousID(currentSpace.getId());
 			//coming out space
@@ -146,9 +147,9 @@ public class GameSystem {
 	}
 	
 	public Space addSafeSpace(UUID prev, UUID next, Color color) {
-		 Space newSpace = new Space(prev, next, color);
+		 Space newSpace = new Space(prev, next, color, true);
 		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) hashMap.get(prev).setNextID(newSpace.getId());
+		 if(prev != null) hashMap.get(prev).setSafeNextID(newSpace.getId());
 		 if(next != null) hashMap.get(next).setPreviousID(newSpace.getId());
 		 return newSpace;
 	}
@@ -156,7 +157,7 @@ public class GameSystem {
 	public Space addSafeSpace(Space prev, Space next, Color color) {
 		 Space newSpace = new Space(prev, next, color);
 		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) prev.setNext(newSpace);
+		 if(prev != null) prev.setSafeNext(newSpace);
 		 if(next != null) next.setPrevious(newSpace);
 		 return newSpace;
 	}
@@ -244,6 +245,8 @@ public class GameSystem {
 			System.out.println("Player " + turn + " wins!"); //temp; should be done via UI
 			return true;
 		}
+		
+		/* turn increments disabled for debug
 		//give this player another turn if a 2 is played
 		else if(thisCard.getNumber() == 2) {
 			return false;
@@ -252,6 +255,7 @@ public class GameSystem {
 		else if(++turn >= 4) {
 			turn=0;
 		}
+		*/
 		return false;
 	}
 	
@@ -282,6 +286,21 @@ public class GameSystem {
 					players.get(player).getTokens()[tok].setSpaceID(startSpaces[player]);
 				}
 			}
+		}
+	}
+	
+	//print all the UUIDs in order of the spaces of one player's path
+	public void printIDs(int player) {
+		UUID id = startSpaces[player];
+		System.out.println(id.toString());
+		Space s = hashMap.get(id);
+		while(!(s instanceof TerminalSpace) || (id == startSpaces[player])) {
+			if(s.getSafeNextID() != null && hashMap.get(s.getSafeNextID()).getColor() == Color.values()[player]) {
+				id = s.getSafeNextID();
+			}
+			else id = s.getNextID();
+			System.out.println(id.toString());
+			s = hashMap.get(id);
 		}
 	}
 
@@ -325,8 +344,9 @@ public class GameSystem {
 			//debug
 			if(t.getSpaceID() == startSpaces[turn]) debug_s++;
 		}
-		//if(debug_s < 2) System.out.println("P" + turn + "S: " + debug_s);
-		if(debug_h > 0) System.out.println("P" + turn + "H: " + debug_h);
+		//if(debug_s < 2)
+		//System.out.println("P" + turn + "S: " + debug_s);
+		//if(debug_h > 0) System.out.println("P" + turn + "H: " + debug_h);
 		return gameOver;
 	}
 	

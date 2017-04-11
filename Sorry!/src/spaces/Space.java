@@ -75,8 +75,8 @@ public class Space extends JLabel
 		initVisualProperties();
 	}
 	
-	//safe space
-	public Space(UUID previous, UUID safeNext, Color color) {
+	//safe space: ID-based; boolean added to keep compiler happy for now
+	public Space(UUID previous, UUID safeNext, Color color, boolean b) {
 		this.previousID = previous;
 		this.slideToID = null;
 		this.safeNextID = safeNext;
