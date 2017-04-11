@@ -7,6 +7,7 @@ import gameItems.Token;
 import spaces.Space;
 import spaces.TerminalSpace;
 import utilities.Color;
+import utilities.TerminalType;
 
 
 public class Player {
@@ -81,8 +82,8 @@ public class Player {
 			case 11:
 				//move 11
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
-				//swap with opponent (requires token not to be in start)
-				if(t.getSpaceID() != startSpace) {
+				//swap with opponent (requires token not to be in start or safety zone)
+				if(t.getSpaceID() != startSpace && !hashMap.get(t.getSpaceID()).isSafe()) {
 					t.addMoves(findOpponentTokens(players));
 				}
 				break;
@@ -127,7 +128,7 @@ public class Player {
 		//the space must be the start of a slide of a different color
 		if(count == numMoves &&
 		   space != null &&
-		   (!findMyTokens().contains(space.getId()) || (space.getSlideToID() != null && space.getColor() != color))) {
+		   (!findMyTokens().contains(space.getId()))) { // || (space.getSlideToID() != null && space.getColor() != color))) {
 			moveOptions.add(space.getId());
 		}
 		return moveOptions;
@@ -140,10 +141,15 @@ public class Player {
 		}
 	}
 	
+	//get IDs of locations of all this player's tokens, except those in home
 	public ArrayList<UUID> findMyTokens() {
 		ArrayList<UUID> tokenIDs = new ArrayList<UUID>();
+		Token t;
 		for(int token=0;token<4;token++) {
-			tokenIDs.add(tokens[token].getSpaceID());
+			t = tokens[token];
+			if(!((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME))) {
+				tokenIDs.add(t.getSpaceID());
+			}
 		}
 		return tokenIDs;
 	}

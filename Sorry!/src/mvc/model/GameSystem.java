@@ -22,6 +22,7 @@ public class GameSystem {
 	private Deck stock;
 	private Deck discard;
 	private UUID[] startSpaces = new UUID[4];
+	private UUID[] safeZoneStartSpaces = new UUID[4];
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
 	private Card thisCard;
 	private boolean showCard;
@@ -29,7 +30,7 @@ public class GameSystem {
 	
 	public GameSystem() {
 		buildGameBoard();
-		//playGame(); //used for debug
+		//playGame(); //used for debug - a game should only start when the user chooses to 
 	}
 	
 	public void buildGameBoard() {
@@ -97,7 +98,10 @@ public class GameSystem {
 		currentSafe.setSafeNextID(homeGreen.getId());
 		hashMap.put(homeGreen.getId(), homeGreen);
 		
-		UUID[] safeZoneStartSpaces = {firstSafeRed.getId(), firstSafeBlue.getId(), firstSafeYellow.getId(), firstSafeGreen.getId()};
+		safeZoneStartSpaces[0] = firstSafeRed.getId();
+		safeZoneStartSpaces[1] = firstSafeBlue.getId();
+		safeZoneStartSpaces[2] = firstSafeYellow.getId();
+		safeZoneStartSpaces[3] = firstSafeGreen.getId();
 		
 		//let firstSpace be the start of the red slide by red's home.
 		//assign color, slide, and safeNext properties
@@ -108,15 +112,12 @@ public class GameSystem {
 			currentSpace.setSlideToID(hashMap.get(hashMap.get(hashMap.get(currentSpace.getNextID()).getNextID()).getNextID()).getId());
 			//fork to safe zone
 			currentSpace = hashMap.get(currentSpace.getNextID());
-			//System.out.println("   "+currentSpace.getId());
 			currentSpace.setSafeNextID(safeZoneStartSpaces[color]);
 			hashMap.get(safeZoneStartSpaces[color]).setPreviousID(currentSpace.getId());
 			//coming out space
 			currentSpace = hashMap.get(hashMap.get(currentSpace.getNextID()).getNextID());
 			currentSpace.setStartPreviousID(startSpaces[color]);
-			Space debug = hashMap.get(startSpaces[color]);
 			hashMap.get(startSpaces[color]).setNextID(currentSpace.getId());
-			debug = hashMap.get(startSpaces[color]);
 			//second slide
 			for(int i=0;i<5;i++) {
 				currentSpace = hashMap.get(currentSpace.getNextID());
@@ -203,9 +204,7 @@ public class GameSystem {
 	}
 	
 	
-	/**
-	*  Return true if the game is over
-	*/
+	//Return true if the game is over
 	public boolean takeTurn() {
 		//draw a card and manage the deck
 		thisCard = stock.remove(0);
@@ -246,7 +245,6 @@ public class GameSystem {
 			return true;
 		}
 		
-		/* turn increments disabled for debug
 		//give this player another turn if a 2 is played
 		else if(thisCard.getNumber() == 2) {
 			return false;
@@ -255,7 +253,7 @@ public class GameSystem {
 		else if(++turn >= 4) {
 			turn=0;
 		}
-		*/
+		
 		return false;
 	}
 	
@@ -281,12 +279,45 @@ public class GameSystem {
 	public void evict(UUID id) {
 		for(int player=0; player<4; player++) {
 			for(int tok=0; tok<4; tok++) {
-				//bump back to start if occupied
-				if(players.get(player).getTokens()[tok].getSpaceID() == id) {
+				//bump back to start if occupied and not in home
+				if((players.get(player).getTokens()[tok].getSpaceID() == id) && !inHome(players.get(player).getTokens()[tok])) {
 					players.get(player).getTokens()[tok].setSpaceID(startSpaces[player]);
 				}
 			}
 		}
+	}
+	
+	//creates an array of all the UUIDs used (except start spaces)
+	//indices 0-59: IDs of perimeter squares, starting at top left corner and going clockwise
+	//indices 60-83: IDs of safe zones, from fork to home, in this order: Y, G, R, B
+	public UUID[] getSpaceIDs() {
+		UUID[] ids = new UUID[84];
+		UUID id = startSpaces[1]; //blue start space
+		//iterate to to left corner
+		for(int i=0; i<12; i++) {
+			id = hashMap.get(id).getNextID();
+		}
+		//add 60 perimeter IDs to the array
+		for(int i=0; i<60; i++) {
+			ids[i] = id;
+			id = hashMap.get(id).getNextID();
+		}
+		//add safe zone IDs to the array
+		int[] safeZoneOrder = {2,3,0,1}; //Y,G,R,B
+		int index = 60;
+		for(int i:safeZoneOrder) {
+			id = safeZoneStartSpaces[i];
+			ids[index++] = id;
+			for(int j=0; j<5; j++) {
+				id = hashMap.get(id).getSafeNextID();
+				ids[index++] = id;
+			}
+		}
+		return ids;
+	}
+	
+	public UUID[] getStartIDs() {
+		return startSpaces;
 	}
 	
 	//print all the UUIDs in order of the spaces of one player's path
