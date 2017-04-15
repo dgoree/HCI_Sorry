@@ -27,8 +27,13 @@ public class Player {
 	
 	public void calcMoves(ArrayList<Player> players, int cardNumber) {
 		
-		//sevens can't be handled individually
+		//sevens have to be handled specially
 		if(cardNumber == 7) {
+			//any one token can move seven
+			for(Token t: tokens) {
+				t.setMoves(findSimpleMoves(t, 7, true));
+			}
+			//two tokens can split the seven spaces
 			findSplitMoves();
 		}
 		
@@ -40,6 +45,7 @@ public class Player {
 					//move to any non-safe space containing an opponent's token
 					t.setMoves(findOpponentTokens(players));
 				}
+				else t.setMoves(new ArrayList<UUID>());
 				break;
 			case 1:
 				//move forward 1
@@ -134,10 +140,25 @@ public class Player {
 		return moveOptions;
 	}
 	
-	//TODO
+	//calculate all possible move combinations of exactly two tokens totaling 7 spaces
 	public void findSplitMoves() {
-		for(Token t: tokens) {
-			t.setMoves(new ArrayList<UUID>());
+		ArrayList<UUID> t1_moves;
+		ArrayList<UUID> t2_moves;
+		for(int token1=0; token1<3; token1++) {
+			for(int token2=token1+1; token2<3; token2++) {
+				for(int n=1; n<=6; n++) {
+					//If token1 can move n spaces and token2 can move 7-n spaces, these moves are valid.
+					t1_moves = findSimpleMoves(tokens[token1],n,true);
+					if(!t1_moves.isEmpty()) {
+						t2_moves = findSimpleMoves(tokens[token2],7-n,true);
+						if(!t2_moves.isEmpty()) {
+							tokens[token1].addMoves(t1_moves);
+							tokens[token2].addMoves(t2_moves);
+						}
+					}
+					
+				}
+			}
 		}
 	}
 	
