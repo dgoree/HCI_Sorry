@@ -24,19 +24,34 @@ public class Controller implements ActionListener
 	{
 		if(e.getActionCommand().equals(CardHolder.DRAW_CARD_COMMAND))
 		{
-			//TODO check to make sure a card can be drawn.
-			//They clicked a button to draw a card.
-			gameSystem.takeTurn();
+			if(gameSystem.isGameInProgress())
+			{
+				//They clicked a button to draw a card.
+				gameSystem.takeTurn();
+			}
+			else
+			{
+				//TODO: notify the user they must start a game?
+			}
 		}
 		else if(e.getActionCommand().equals(GameFrame.NEW_GAME_COMMAND))
 		{
-			//TODO start a new game
+			if(!gameSystem.isGameInProgress())
+			{
+				gameSystem.playGame();
+			}
+			else
+			{
+				//TODO confirm they want to restart the game.
+				gameSystem.playGame(); //FIXME: if a game has been played already, extra players are added and the same person wins every time and imediately. 
+			}
 			System.out.println("start a new game"); //debug print. TODO: remove
 		}
 		else if(e.getActionCommand().equals(GameFrame.QUIT_GAME_COMMAND))
 		{
-			//TODO quit game
+			//TODO quit game elegantly with posibility of starting a new one without closing the program?
 			System.out.println("game ended"); //debug print. TODO: remove
+			System.exit(0);
 		}
 		
 	}

@@ -26,9 +26,11 @@ public class GameSystem {
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
 	private Card thisCard;
 	private boolean showCard;
+	private boolean gameInProgress;
 	private List<Listener> listeners = new ArrayList<Listener>();
 	
 	public GameSystem() {
+		this.gameInProgress = false;
 		buildGameBoard();
 		//playGame(); //used for debug - a game should only start when the user chooses to 
 	}
@@ -166,12 +168,13 @@ public class GameSystem {
 	//should be called if the user chooses New Game from the menu
 	public void playGame() {
 		setupGame();
-		
+		gameInProgress = true;
 		//play until someone wins
 		boolean gameOver = false;
 		while(!gameOver) {
 			gameOver = takeTurn();
 		}
+		gameInProgress = false;
 	}
 	
 	public void setupGame() {
@@ -241,7 +244,7 @@ public class GameSystem {
 		
 		//end game, or go to next turn
 		if(checkGameOver()) {
-			System.out.println("Player " + turn + " wins!"); //temp; should be done via UI
+			System.out.println("Player " + turn + " wins!"); //FIXME: temp; should be done via UI. Listen to gameInProgress variable?
 			return true;
 		}
 		
@@ -394,6 +397,11 @@ public class GameSystem {
 	public boolean getShowCard()
 	{
 		return showCard;
+	}
+	
+	public boolean isGameInProgress()
+	{
+		return gameInProgress;
 	}
 	
 	public void addListener(final Listener listener)
