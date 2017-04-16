@@ -190,6 +190,7 @@ public class GameSystem {
 	
 	//setup names and place all tokens in respective starts
 	public void setupPlayers() {
+		players.clear(); //all data needs to be erased in case this is not the first game
 		Token[][] tokens = new Token[4][4]; //player/color, token number
 		Player p;
 		
@@ -379,8 +380,8 @@ public class GameSystem {
 			if(t.getSpaceID() == startSpaces[turn]) debug_s++;
 		}
 		//if(debug_s < 2)
-		//System.out.println("P" + turn + "S: " + debug_s);
-		//if(debug_h > 0) System.out.println("P" + turn + "H: " + debug_h);
+		//System.out.println("P" + turn + " Start: " + debug_s);
+		//if(debug_h > 0) System.out.println("P" + turn + " Home: " + debug_h);
 		return gameOver;
 	}
 	

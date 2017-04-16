@@ -43,7 +43,7 @@ public class Controller implements ActionListener
 			else
 			{
 				//TODO confirm they want to restart the game.
-				gameSystem.playGame(); //FIXME: if a game has been played already, extra players are added and the same person wins every time and imediately. 
+				gameSystem.playGame(); 
 			}
 			System.out.println("start a new game"); //debug print. TODO: remove
 		}
