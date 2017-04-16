@@ -25,7 +25,7 @@ public class Space extends JLabel
 	protected UUID id;
 	
 	//Constants needed for GUI
-	private static final int SIDE_LENGTH = 40;
+	public static final int SIDE_LENGTH = 40;
 	private static final java.awt.Color NAVY = new java.awt.Color(0, 0, 128);
 	private static final int BORDER_WEIGHT = 2;
 	

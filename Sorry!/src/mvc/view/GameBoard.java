@@ -74,14 +74,15 @@ public class GameBoard extends JPanel
 	private void initializeSlides()
 	{
 		//Yellow Slide (4 spaces)
+		int spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("yellowSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -93,14 +94,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Yellow slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("yellowSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -112,14 +114,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Green slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * 4));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("greenSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * 4, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -131,14 +134,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Green slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("greenSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -150,14 +154,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Red Slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("redSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -169,14 +174,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Red slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("redSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -188,14 +194,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Blue slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("blueSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -207,14 +214,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Blue slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("blueSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -305,7 +313,8 @@ public class GameBoard extends JPanel
 		TerminalSpace start = new TerminalSpace(null, null, null, TerminalType.START);
 		
 		//Set "START" size and color
-		start.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
+		int startLength = Space.SIDE_LENGTH * 3; //FIXME: make static?
+		start.setPreferredSize(new Dimension(startLength, startLength));
 		start.setBackground(color);
 		start.setOpaque(true);
 		
@@ -387,15 +396,17 @@ public class GameBoard extends JPanel
 		TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
 		
 		//Set "HOME" size and color
-		home.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
+		int homeLength = Space.SIDE_LENGTH * 3;
+		home.setPreferredSize(new Dimension(homeLength, homeLength));
 		home.setBackground(color);
 		home.setOpaque(true);
 		
 		//Set "HOME" location
 		//FIXME: Padding
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridwidth = 3; //FIXME: Use constant?
-		c.gridheight = 3; //FIXME: Use constant?
+		int homeGridLength = 3;
+		c.gridwidth = homeGridLength; //FIXME: make static?
+		c.gridheight = homeGridLength; //FIXME: make static?
 		c.gridx = gridX;
 		c.gridy = gridY;
 		
