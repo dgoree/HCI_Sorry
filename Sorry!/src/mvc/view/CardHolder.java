@@ -92,7 +92,7 @@ public class CardHolder extends JLabel implements Listener
 			{
 				image = new ImageIcon("images/Card_" + cardNum +".jpg");
 			}
-			Image scaledImage = image.getImage().getScaledInstance(160, 240, Image.SCALE_SMOOTH);
+			Image scaledImage = image.getImage().getScaledInstance(160, 240, Image.SCALE_SMOOTH); //FIXME: constants?
 			image = new ImageIcon(scaledImage);
 			this.setIcon(image);
 		}
