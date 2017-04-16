@@ -22,13 +22,11 @@ public class Controller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() instanceof JButton)
+		if(e.getActionCommand().equals(CardHolder.DRAW_CARD_COMMAND))
 		{
-			if(((JButton)e.getSource()).getText().equals("<html><center>" + "Click to draw a card"+"</center></html>"))
-			{
-				//They clicked a button to draw a card.
-				gameSystem.takeTurn();
-			}
+			//TODO check to make sure a card can be drawn.
+			//They clicked a button to draw a card.
+			gameSystem.takeTurn();
 		}
 		else if(e.getActionCommand().equals(GameFrame.NEW_GAME_COMMAND))
 		{
