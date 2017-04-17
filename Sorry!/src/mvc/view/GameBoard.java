@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -34,7 +35,6 @@ public class GameBoard extends JPanel
 		
 		initialize(gameSystem, controller);	
 	}
-	
 	
 	/**
 	 * Initializes the visual elements of the game board, including spaces and
@@ -117,12 +117,12 @@ public class GameBoard extends JPanel
 		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * 4));
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("greenSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * 4, Image.SCALE_FAST)));
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -239,9 +239,132 @@ public class GameBoard extends JPanel
 	 */
 	private void initializeSpaces()
 	{
+		//int uuid = 0;
 		//Top row
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
+//			uuid = i;
+//			Space space = gameSystem.getSpace(spaces[uuid]);
+//			Space slideTo = space.getSlideTo();
+//			GridBagConstraints c;
+//			if(slideTo != null) {
+//				int length = space.getDistance(slideTo);
+//				ImageIcon icon;
+//				switch(length) {
+//				case 4:
+//					switch(space.getColor()) {
+//					case YELLOW:
+//						icon = new ImageIcon("yellowSlide4.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * length, Space.SIDE_LENGTH, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 1;
+//						c.gridy = 0;
+//						c.gridwidth = 4;
+//						break;
+//					case GREEN:
+//						icon = new ImageIcon("greenSlide4.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * length, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 15;
+//						c.gridy = 1;
+//						c.gridheight = 4;
+//						break;
+//					case RED:
+//						icon = new ImageIcon("redSlide4.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * length, Space.SIDE_LENGTH, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 11;
+//						c.gridy = 15;
+//						c.gridwidth = 4;
+//						break;
+//					case BLUE:
+//						icon = new ImageIcon("blueSlide4.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * length, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 0;
+//						c.gridy = 11;
+//						c.gridheight = 4;
+//						break;
+//					}
+//					break;
+//				case 5:
+//					switch(space.getColor()) {
+//					case YELLOW:
+//						icon = new ImageIcon("yellowSlide5.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * length, Space.SIDE_LENGTH, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 9;
+//						c.gridy = 0;
+//						c.gridwidth = 5;
+//						break;
+//					case GREEN:
+//						icon = new ImageIcon("greenSlide5.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * length, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 15;
+//						c.gridy = 9;
+//						c.gridheight = 5;
+//						break;
+//					case RED:
+//						icon = new ImageIcon("redSlide5.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * length, Space.SIDE_LENGTH, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 2;
+//						c.gridy = 15;
+//						c.gridwidth = 5;
+//						break;
+//					case BLUE:
+//						icon = new ImageIcon("blueSlide5.png");
+//						space.setIcon(icon);
+//						space.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * length, Image.SCALE_FAST)));
+//						space.setHorizontalAlignment(JLabel.CENTER);
+//						space.setVerticalAlignment(JLabel.CENTER);
+//						
+//						c = new GridBagConstraints();
+//						c.gridx = 0;
+//						c.gridy = 2;
+//						c.gridheight = 5;
+//						break;
+//					}
+//					break;
+//				}
+//			}
+//			else
+//			{
+//				
+//			}
+//			c = new GridBagConstraints();
+//			c.gridx = i;
+//			c.gridy = 0;
+
 			Space space = new Space(null, null);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = i;

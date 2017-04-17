@@ -39,13 +39,13 @@ public class GameSystem {
 		//create start spaces
 		TerminalSpace ts;
 		for(int i=0;i<4;i++) {
-			ts = new TerminalSpace(null, null, Color.values()[i], TerminalType.START, true); 
+			ts = new TerminalSpace(null, null, Color.values()[i], TerminalType.START); 
 			startSpaces[i] = ts.getId();
 			hashMap.put(ts.getId(), ts);
 		}
 		
 		//create and link 60 perimeter squares with no properties
-		Space firstSpace = new Space(null,null, true);
+		Space firstSpace = new Space(null,null);
 		hashMap.put(firstSpace.getId(), firstSpace);
 		Space currentSpace = addSpace(firstSpace.getId(), null);
 		for(int i=0;i<58;i++) {
@@ -57,46 +57,46 @@ public class GameSystem {
 		
 		//create safe zones
 		//red
-		Space firstSafeRed = new Space(null, null, Color.RED, true);
+		Space firstSafeRed = new Space(null, null, Color.RED);
 		hashMap.put(firstSafeRed.getId(), firstSafeRed);
 		Space currentSafe = addSafeSpace(firstSafeRed.getId(), null, Color.RED);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.RED);
 		}
-		TerminalSpace homeRed = new TerminalSpace(currentSafe, null, Color.RED, TerminalType.HOME);
+		TerminalSpace homeRed = new TerminalSpace(currentSafe.getId(), null, Color.RED, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeRed.getId());
 		hashMap.put(homeRed.getId(), homeRed);
 		
 		//blue
-		Space firstSafeBlue = new Space(null, null, Color.BLUE, true);
+		Space firstSafeBlue = new Space(null, null, Color.BLUE);
 		hashMap.put(firstSafeBlue.getId(), firstSafeBlue);
 		currentSafe = addSafeSpace(firstSafeBlue.getId(), null, Color.BLUE);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.BLUE);
 		}
-		TerminalSpace homeBlue = new TerminalSpace(currentSafe, null, Color.BLUE, TerminalType.HOME);
+		TerminalSpace homeBlue = new TerminalSpace(currentSafe.getId(), null, Color.BLUE, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeBlue.getId());
 		hashMap.put(homeBlue.getId(), homeBlue);
 		
 		//yellow
-		Space firstSafeYellow = new Space(null, null, Color.YELLOW, true);
+		Space firstSafeYellow = new Space(null, null, Color.YELLOW);
 		hashMap.put(firstSafeYellow.getId(), firstSafeYellow);
 		currentSafe = addSafeSpace(firstSafeYellow.getId(), null, Color.YELLOW);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.YELLOW);
 		}
-		TerminalSpace homeYellow = new TerminalSpace(currentSafe, null, Color.YELLOW, TerminalType.HOME);
+		TerminalSpace homeYellow = new TerminalSpace(currentSafe.getId(), null, Color.YELLOW, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeYellow.getId());
 		hashMap.put(homeYellow.getId(), homeYellow);
 		
 		//green
-		Space firstSafeGreen = new Space(null, null, Color.GREEN, true);
+		Space firstSafeGreen = new Space(null, null, Color.GREEN);
 		hashMap.put(firstSafeGreen.getId(), firstSafeGreen);
 		currentSafe = addSafeSpace(firstSafeGreen.getId(), null, Color.GREEN);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.GREEN);
 		}
-		TerminalSpace homeGreen = new TerminalSpace(currentSafe, null, Color.GREEN, TerminalType.HOME);
+		TerminalSpace homeGreen = new TerminalSpace(currentSafe.getId(), null, Color.GREEN, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeGreen.getId());
 		hashMap.put(homeGreen.getId(), homeGreen);
 		
@@ -134,34 +134,18 @@ public class GameSystem {
 	}
 	
 	public Space addSpace(UUID prev, UUID next) {
-		 Space newSpace = new Space(prev, next, true);
+		 Space newSpace = new Space(prev, next);
 		 hashMap.put(newSpace.getId(), newSpace);
 		 if(prev != null) hashMap.get(prev).setNextID(newSpace.getId());
 		 if(next != null) hashMap.get(next).setPreviousID(newSpace.getId());
 		 return newSpace;
 	}
 	
-	public Space addSpace(Space prev, Space next) {
-		 Space newSpace = new Space(prev, next);
-		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) prev.setNext(newSpace);
-		 if(next != null) next.setPrevious(newSpace);
-		 return newSpace;
-	}
-	
 	public Space addSafeSpace(UUID prev, UUID next, Color color) {
-		 Space newSpace = new Space(prev, next, color, true);
+		 Space newSpace = new Space(prev, next, color);
 		 hashMap.put(newSpace.getId(), newSpace);
 		 if(prev != null) hashMap.get(prev).setSafeNextID(newSpace.getId());
 		 if(next != null) hashMap.get(next).setPreviousID(newSpace.getId());
-		 return newSpace;
-	}
-	
-	public Space addSafeSpace(Space prev, Space next, Color color) {
-		 Space newSpace = new Space(prev, next, color);
-		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) prev.setSafeNext(newSpace);
-		 if(next != null) next.setPrevious(newSpace);
 		 return newSpace;
 	}
 	
@@ -405,6 +389,33 @@ public class GameSystem {
 		return gameInProgress;
 	}
 	
+	public Space getSpace(UUID id)
+	{
+		return hashMap.get(id);
+	}
+	
+	//TODO test me
+	public int getDistance(Space space1, Space space2) {
+		if(space1.equals(space2))
+			return 0;		
+		return 1 + getDistance(getSpace(space1.getNextID()), space2);
+	}
+	
+
+	//TODO test me
+	public UUID getSpacesAway(Space space, int distance) {
+		if(distance == 0)
+			return space.getId();
+		else if(distance ==1)
+			return getSpace(space.getNextID()).getId(); 		
+		else
+			return getSpacesAway(getSpace(space.getNextID()), distance-1);
+	}
+	
+	public HashMap<UUID, Space> getHashMap() {
+		return hashMap;
+	}
+
 	public void addListener(final Listener listener)
 	{
 		listeners.add(listener);

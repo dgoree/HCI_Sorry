@@ -10,11 +10,6 @@ import utilities.Color;
 
 public class Space extends JLabel
 {
-	protected Space previous;
-	protected Space next;
-	protected Space slideTo;
-	protected Space safeNext;
-	protected Space startPrevious;
 	protected UUID previousID;
 	protected UUID nextID;
 	protected UUID slideToID;
@@ -28,25 +23,9 @@ public class Space extends JLabel
 	public static final int SIDE_LENGTH = 40;
 	private static final java.awt.Color NAVY = new java.awt.Color(0, 0, 128);
 	private static final int BORDER_WEIGHT = 2;
-	
+
 	//common space
-	public Space(Space previous, Space next) {
-		if(previous == null) this.previous = null;
-		else this.previous = previous.deepCopy();
-		if(next == null) this.next = null;
-		else this.next = next.deepCopy();
-		this.slideTo = null;
-		this.safeNext = null;
-		this.startPrevious = null;
-		this.color = null;
-		this.isSafe = false;
-		this.id = UUID.randomUUID();
-		
-		initVisualProperties();
-	}
-	
-	//common space; bool added to keep compiler happy for now
-	public Space(UUID previous, UUID next, boolean b) {
+	public Space(UUID previous, UUID next) {
 		this.previousID = previous;
 		this.nextID = next;
 		this.slideToID = null;
@@ -58,25 +37,9 @@ public class Space extends JLabel
 		
 		initVisualProperties();
 	}
-	
+
 	//safe space
-	public Space(Space previous, Space safeNext, Color color) {
-		if(previous == null) this.previous = null;
-		else this.previous = previous.deepCopy();
-		this.next = null;
-		this.slideTo = null;
-		if(safeNext == null) this.safeNext = null;
-		else this.safeNext = safeNext.deepCopy();
-		this.startPrevious = null;
-		this.color = color;
-		this.isSafe = true;
-		this.id = UUID.randomUUID();
-		
-		initVisualProperties();
-	}
-	
-	//safe space: ID-based; boolean added to keep compiler happy for now
-	public Space(UUID previous, UUID safeNext, Color color, boolean b) {
+	public Space(UUID previous, UUID safeNext, Color color) {
 		this.previousID = previous;
 		this.slideToID = null;
 		this.safeNextID = safeNext;
@@ -87,43 +50,7 @@ public class Space extends JLabel
 		
 		initVisualProperties();
 	}
-	
-	//slide space
-	public Space(Space previous, Space next, Space slideTo, Color color) {
-		if(previous == null) this.previous = null;
-		else this.previous = previous.deepCopy();
-		if(next == null) this.next = null;
-		else this.next = next.deepCopy();
-		if(slideTo == null) this.slideTo = null;
-		else this.slideTo = slideTo.deepCopy();
-		this.safeNext = null;
-		this.startPrevious = null;
-		this.color = color;
-		this.isSafe = false;
-		this.id = UUID.randomUUID();
-		
-		initVisualProperties();
-	}
-	
-	//fully customizable
-	public Space(Space previous, Space next, Space slideTo, Space safeNext, Space startPrevious, Color color, boolean isSafe) {
-		if(previous == null) this.previous = null;
-		else this.previous = previous.deepCopy();
-		if(next == null) this.next = null;
-		else this.next = next.deepCopy();
-		if(slideTo == null) this.slideTo = null;
-		else this.slideTo = slideTo.deepCopy();
-		if(safeNext == null) this.safeNext = null;
-		else this.safeNext = safeNext.deepCopy();
-		if(startPrevious == null) this.startPrevious = null;
-		else this.startPrevious = startPrevious.deepCopy();
-		this.color = color;
-		this.isSafe = isSafe;
-		this.id = UUID.randomUUID();
-		
-		initVisualProperties();
-	}
-	
+
 	/**
 	 * Set size, border, and fill of common spaces
 	 */
@@ -142,58 +69,11 @@ public class Space extends JLabel
 		setOpaque(true);
 	}
 	
-	public Space deepCopy() {
-		Space copy = new Space(this.previous, this.next, this.slideTo, this.safeNext, this.startPrevious, this.color, this.isSafe);
-		copy.setId(this.id);
-		return copy;
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof Space)
 			return this.id.equals(((Space)o).id);
 		return false;
-	}
-
-	public Space getPrevious() {
-		return previous;
-	}
-
-	public void setPrevious(Space previous) {
-		this.previous = previous.deepCopy();
-	}
-
-	public Space getNext() {
-		return next;
-	}
-
-	public Space setNext(Space next) {
-		this.next = next.deepCopy();
-		return next;
-	}
-
-	public Space getSlideTo() {
-		return slideTo;
-	}
-
-	public void setSlideTo(Space slideTo) {
-		this.slideTo = slideTo.deepCopy();
-	}
-
-	public Space getSafeNext() {
-		return safeNext;
-	}
-
-	public void setSafeNext(Space safeNext) {
-		this.safeNext = safeNext.deepCopy();
-	}
-	
-	public Space getStartPrevious() {
-		return this.startPrevious;
-	}
-	
-	public void setStartPrevious(Space startPrevious) {
-		this.startPrevious = startPrevious;
 	}
 	
 	public UUID getPreviousID() {
