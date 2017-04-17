@@ -18,12 +18,15 @@ public class Space extends JLabel
 	protected Color color;
 	protected boolean isSafe;
 	protected UUID id;
-	
+		
 	//Constants needed for GUI
 	public static final int SIDE_LENGTH = 40;
 	private static final java.awt.Color NAVY = new java.awt.Color(0, 0, 128);
 	private static final int BORDER_WEIGHT = 2;
 
+	public Space() {
+		
+	}
 	//common space
 	public Space(UUID previous, UUID next) {
 		this.previousID = previous;
@@ -138,6 +141,23 @@ public class Space extends JLabel
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public void setBackground(utilities.Color color) {
+		switch(color) {
+		case RED:
+			this.setBackground(java.awt.Color.RED);
+			break;
+		case BLUE:
+			this.setBackground(java.awt.Color.BLUE);
+			break;
+		case YELLOW:
+			this.setBackground(java.awt.Color.YELLOW);
+			break;
+		case GREEN:
+			this.setBackground(java.awt.Color.GREEN);
+			break;
+		}
 	}
 	
 	

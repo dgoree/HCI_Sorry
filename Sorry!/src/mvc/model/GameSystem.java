@@ -28,7 +28,7 @@ public class GameSystem {
 	private boolean showCard;
 	private boolean gameInProgress;
 	private List<Listener> listeners = new ArrayList<Listener>();
-	
+		
 	public GameSystem() {
 		this.gameInProgress = false;
 		buildGameBoard();
@@ -308,6 +308,10 @@ public class GameSystem {
 		return startSpaces;
 	}
 	
+	public UUID[] getSafeZoneStartSpaces() {
+		return safeZoneStartSpaces;
+	}
+
 	//print all the UUIDs in order of the spaces of one player's path
 	public void printIDs(int player) {
 		UUID id = startSpaces[player];
@@ -406,10 +410,20 @@ public class GameSystem {
 	public UUID getSpacesAway(Space space, int distance) {
 		if(distance == 0)
 			return space.getId();
-		else if(distance ==1)
-			return getSpace(space.getNextID()).getId(); 		
+		else if(getSpace(space.getNextID()) == null) {
+			if(getSpace(space.getSafeNextID()) == null) {
+				return null;
+			}
+			else if(distance == 1)
+				return space.getSafeNextID();
+			else
+				return getSpacesAway(getSpace(space.getSafeNextID()), distance-1);
+		}
+		else if(distance == 1) {
+			return space.getNextID();
+		}
 		else
-			return getSpacesAway(getSpace(space.getNextID()), distance-1);
+			return  getSpacesAway(getSpace(space.getNextID()), distance-1);
 	}
 	
 	public HashMap<UUID, Space> getHashMap() {
