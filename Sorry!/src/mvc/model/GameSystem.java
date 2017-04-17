@@ -152,13 +152,7 @@ public class GameSystem {
 	//should be called if the user chooses New Game from the menu
 	public void playGame() {
 		setupGame();
-		gameInProgress = true;
-		//play until someone wins
-		boolean gameOver = false;
-		while(!gameOver) {
-			gameOver = takeTurn();
-		}
-		gameInProgress = false;
+		//gameplay is controlled by UI
 	}
 	
 	public void setupGame() {
@@ -192,8 +186,8 @@ public class GameSystem {
 	}
 	
 	
-	//Return true if the game is over
-	public boolean takeTurn() {
+	//Return true if there is an available move
+	public boolean drawCard() {
 		//draw a card and manage the deck
 		thisCard = stock.remove(0);
 		//Maria made a couple changes here to make the card number more easily accessible to the view.
@@ -211,19 +205,32 @@ public class GameSystem {
 		//calculate all available move options
 		players.get(turn).calcMoves(players, thisCard.getNumber());
 		
-		//TODO: display options and move the token of the player's choosing
+		//determine if there are any valid moves
 		ArrayList<UUID> moveOptions;
 		for(int token=0;token<4;token++) {
 			moveOptions = players.get(turn).getTokens()[token].getMoves();
 			
-			//TODO: display options and get user choice
-			
-			//for now: move first available token
 			if(!moveOptions.isEmpty()) {
-				moveToken(token, moveOptions.get(0));
-				break;
+				return true;
 			}
 		}
+		return false;
+	}
+	
+	//move a token and return true if game is over
+	public boolean moveToken(int t, UUID destination) {
+		//remove any players occupying destination space
+		evict(destination);
+		//perform slide if necessary
+		UUID slideToID = hashMap.get(destination).getSlideToID(); 
+		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
+			while(destination != slideToID) {
+				destination = hashMap.get(destination).getNextID();
+				evict(destination);
+			}
+		}
+		//move token to end of slide
+		players.get(turn).getTokens()[t].setSpaceID(destination);
 		
 		showCard = false;
 		
@@ -243,23 +250,6 @@ public class GameSystem {
 		}
 		
 		return false;
-	}
-	
-	public void moveToken(int t, UUID destination) {
-		//move token to destination
-		players.get(turn).getTokens()[t].setSpaceID(destination);
-		//remove any players occupying this space
-		evict(destination);
-		//perform slide if necessary
-		UUID slideToID = hashMap.get(destination).getSlideToID(); 
-		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
-			while(destination != slideToID) {
-				destination = hashMap.get(destination).getNextID();
-				evict(destination);
-			}
-		}
-		//move token to end of slide
-		players.get(turn).getTokens()[t].setSpaceID(destination);
 	}
 	
 	//remove any tokens occupying the space with this id.
@@ -310,21 +300,6 @@ public class GameSystem {
 	
 	public UUID[] getSafeZoneStartSpaces() {
 		return safeZoneStartSpaces;
-	}
-
-	//print all the UUIDs in order of the spaces of one player's path
-	public void printIDs(int player) {
-		UUID id = startSpaces[player];
-		System.out.println(id.toString());
-		Space s = hashMap.get(id);
-		while(!(s instanceof TerminalSpace) || (id == startSpaces[player])) {
-			if(s.getSafeNextID() != null && hashMap.get(s.getSafeNextID()).getColor() == Color.values()[player]) {
-				id = s.getSafeNextID();
-			}
-			else id = s.getNextID();
-			System.out.println(id.toString());
-			s = hashMap.get(id);
-		}
 	}
 
 	public int getTurn() {

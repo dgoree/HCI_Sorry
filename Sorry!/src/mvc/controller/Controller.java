@@ -27,7 +27,7 @@ public class Controller implements ActionListener
 			if(gameSystem.isGameInProgress())
 			{
 				//They clicked a button to draw a card.
-				gameSystem.takeTurn();
+				gameSystem.drawCard();
 			}
 			else
 			{
