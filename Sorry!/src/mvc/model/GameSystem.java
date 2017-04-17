@@ -32,7 +32,6 @@ public class GameSystem {
 	public GameSystem() {
 		this.gameInProgress = false;
 		buildGameBoard();
-		//playGame(); //used for debug - a game should only start when the user chooses to 
 	}
 	
 	public void buildGameBoard() {
@@ -149,13 +148,7 @@ public class GameSystem {
 		 return newSpace;
 	}
 	
-	//should be called if the user chooses New Game from the menu
-	public void playGame() {
-		setupGame();
-		//gameplay is controlled by UI
-	}
-	
-	public void setupGame() {
+	public void newGame() {
 		this.turn = 0;
 		this.stock = new Deck(true);
 		this.discard = new Deck(false);

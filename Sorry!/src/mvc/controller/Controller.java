@@ -38,12 +38,12 @@ public class Controller implements ActionListener
 		{
 			if(!gameSystem.isGameInProgress())
 			{
-				gameSystem.playGame();
+				gameSystem.newGame();
 			}
 			else
 			{
 				//TODO confirm they want to restart the game.
-				gameSystem.playGame(); 
+				gameSystem.newGame(); 
 			}
 			System.out.println("start a new game"); //debug print. TODO: remove
 		}
