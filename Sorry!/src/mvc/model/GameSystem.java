@@ -153,6 +153,8 @@ public class GameSystem {
 		this.stock = new Deck(true);
 		this.discard = new Deck(false);
 		setupPlayers();
+		gameInProgress = true;
+		notifyListeners();
 	}
 
 	public ArrayList<Player> getPlayers() {

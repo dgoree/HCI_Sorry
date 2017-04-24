@@ -5,20 +5,24 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import agents.Player;
+import gameItems.Token;
 import mvc.controller.Controller;
 import mvc.model.GameSystem;
+import mvc.model.Listener;
 import spaces.Space;
 import spaces.TerminalSpace;
 import utilities.Color;
 import utilities.TerminalType;
 
-public class GameBoard extends JPanel
+public class GameBoard extends JPanel implements Listener
 {	
 	//The number of spaces along a side of the square game board
 	private static final int NUM_SPACES_PER_SIDE = 16;
@@ -31,9 +35,10 @@ public class GameBoard extends JPanel
 	public GameBoard(GameSystem gameSystem, Controller controller) throws IOException 
 	{
 		this.gameSystem = gameSystem;
+		gameSystem.addListener(this);
 		setLayout(new GridBagLayout());
 		
-		initialize(gameSystem, controller);	
+		initialize(gameSystem, controller);
 	}
 	
 	/**
@@ -465,5 +470,37 @@ public class GameBoard extends JPanel
 		c.gridy = gridY;
 		
 		add(home, c);	
+	}
+	
+	/**
+	 * Display each player's four tokens on the game board
+	 */
+	private void displayTokens()
+	{
+		ArrayList<Player> players = gameSystem.getPlayers();
+		
+		for(Player player : players)
+		{
+			Color color = player.getColor();
+			Token tokens[] = player.getTokens();
+			
+			for(Token token : tokens)
+			{
+				Space space = gameSystem.getSpace(token.getSpaceID());
+				
+				ImageIcon icon = new ImageIcon("images/TokenImages/" + color + "_Token.png");
+				space.setIcon(icon);
+				space.setHorizontalAlignment(JLabel.CENTER);
+				space.setVerticalAlignment(JLabel.CENTER);
+			}
+			
+		}
+		
+	}
+
+	@Override
+	public void updated() 
+	{
+		displayTokens();	
 	}
 }
