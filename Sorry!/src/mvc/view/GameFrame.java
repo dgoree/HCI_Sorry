@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 import mvc.controller.Controller;
 import mvc.model.GameSystem;
 
@@ -14,9 +17,12 @@ import mvc.model.GameSystem;
  */
 public class GameFrame extends JFrame
 {
+	public static final String NEW_GAME_COMMAND = "new game";
+	public static final String QUIT_GAME_COMMAND = "quit game";
 	private static final int MIN_WIDTH = 700;
 	private static final int MIN_HEIGHT = 700;
 	private final GameSystem gameSystem;
+	
 	
 	/**
 	 * Constructs the window
@@ -26,7 +32,8 @@ public class GameFrame extends JFrame
 	{
 		super();
 		this.gameSystem = gameSystem;
-		init(gameSystem, controller);
+		
+		init(gameSystem, controller); 
 		setVisible(true);
 	}
 	
@@ -43,9 +50,20 @@ public class GameFrame extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout(0, 0));
 		
+		//Create menu bar and add to window
+		JMenuBar menuBar = new JMenuBar();
+		JMenuItem newGame = new JMenuItem("New Game");
+		JMenuItem quitGame = new JMenuItem("Quit Game");
+		newGame.setActionCommand(NEW_GAME_COMMAND);
+		quitGame.setActionCommand(QUIT_GAME_COMMAND);
+		newGame.addActionListener(controller);
+		quitGame.addActionListener(controller);
+		menuBar.add(newGame);
+		menuBar.add(quitGame);
+		add(menuBar, BorderLayout.NORTH);
+		
 		//Create game board and add to window
 		GameBoard gameBoard = new GameBoard(gameSystem, controller);
 		add(gameBoard, BorderLayout.CENTER);
 	}
-
 }

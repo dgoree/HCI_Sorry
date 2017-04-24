@@ -1,11 +1,11 @@
 package mvc.view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,6 +15,7 @@ import mvc.controller.Controller;
 import mvc.model.GameSystem;
 import spaces.Space;
 import spaces.TerminalSpace;
+import utilities.Color;
 import utilities.TerminalType;
 
 public class GameBoard extends JPanel
@@ -35,7 +36,6 @@ public class GameBoard extends JPanel
 		initialize(gameSystem, controller);	
 	}
 	
-	
 	/**
 	 * Initializes the visual elements of the game board, including spaces and
 	 * the START, safety zone, and HOME for each of the four colors 
@@ -44,28 +44,31 @@ public class GameBoard extends JPanel
 	private void initialize(final GameSystem gameSystem, final Controller controller) throws IOException 
 	{	
 		initializeSlides();
-		initializeSpaces();
+		initializeSpaces(gameSystem.getSpaceIDs());
 		initializeCardHolder(gameSystem, controller);//Maria's addition
 
+		UUID[] startIDs = gameSystem.getStartIDs();
+		UUID[] safeStartIDs = gameSystem.getSafeZoneStartSpaces();
 		//Yellow
-		initializeStart(Color.YELLOW, 3, 1); //upper-left corner (3, 1)
-		initializeSafetyZone(Color.YELLOW, 2, 1, 2, 5); //(2, 1) to (2, 5)
-		initializeHome(Color.YELLOW, 1, 6); //upper-left corner (1, 6)
+		initializeStart(startIDs, Color.YELLOW, 3, 1); //upper-left corner (3, 1)
+		initializeSafetyZone(safeStartIDs, Color.YELLOW, 2, 1, 2, 5); //(2, 1) to (2, 5)
+		initializeHome(safeStartIDs, Color.YELLOW, 1, 6); //upper-left corner (1, 6)
 		
 		//Green
-		initializeStart(Color.GREEN, 12, 3); //upper-left corner (12, 3)
-		initializeSafetyZone(Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)
-		initializeHome(Color.GREEN, 7, 1); //upper-left corner (7, 1)
+		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
+		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)
+		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
-		initializeStart(Color.RED, 10, 12); //upper-left corner (10, 12)
-		initializeSafetyZone(Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)
-		initializeHome(Color.RED, 12, 7); //upper-left corner (12, 7)
+		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
+		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)
+		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
-		initializeStart(Color.BLUE, 1, 10); //upper-left corner (1, 10)
-		initializeSafetyZone(Color.BLUE, 1, 13, 5, 13); //(1, 13) to (5, 13)
-		initializeHome(Color.BLUE, 6, 12); //upper-left corner (6, 12)
+		initializeStart(startIDs, Color.BLUE, 1, 10); //upper-left corner (1, 10)
+		initializeSafetyZone(safeStartIDs, Color.BLUE, 1, 13, 5, 13); //(1, 13) to (5, 13)
+		initializeHome(safeStartIDs, Color.BLUE, 6, 12); //upper-left corner (6, 12)
+		
 	}
 	
 	/**
@@ -74,14 +77,15 @@ public class GameBoard extends JPanel
 	private void initializeSlides()
 	{
 		//Yellow Slide (4 spaces)
+		int spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("yellowSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -93,14 +97,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Yellow slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("yellowSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -112,14 +117,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Green slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("greenSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -131,14 +137,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Green slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("greenSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -150,14 +157,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Red Slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(160, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("redSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(160, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -169,14 +177,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Red slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(200, 40)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("redSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(200, 40, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH * spaces, Space.SIDE_LENGTH, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -188,14 +197,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Blue slide (4 spaces)
+		spaces = 4;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 160)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("blueSlide4.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 160, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -207,14 +217,15 @@ public class GameBoard extends JPanel
 		}
 		
 		//Blue slide (5 spaces)
+		spaces = 5;
 		{
 			Space slide = new Space(null, null);
-			slide.setPreferredSize(new Dimension(40, 200)); //FIXME: Use constant?
+			slide.setPreferredSize(new Dimension(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces));
 			slide.setOpaque(false);
 			
 			ImageIcon icon = new ImageIcon("blueSlide5.png");
 			slide.setIcon(icon);
-			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(40, 200, Image.SCALE_FAST))); //FIXME: Use constant?
+			slide.setIcon(new ImageIcon(icon.getImage().getScaledInstance(Space.SIDE_LENGTH, Space.SIDE_LENGTH * spaces, Image.SCALE_FAST)));
 			slide.setHorizontalAlignment(JLabel.CENTER);
 			slide.setVerticalAlignment(JLabel.CENTER);
 			
@@ -229,22 +240,28 @@ public class GameBoard extends JPanel
 	/**
 	 * Initializes the spaces along the perimeter of the game board
 	 */
-	private void initializeSpaces()
-	{
+	private void initializeSpaces(UUID[] spaces)
+	{	
+		int uuid = -1;
 		//Top row
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
-			Space space = new Space(null, null);
+			uuid++;//TODO remember how ++i vs i++ works and combine with line below.
+			Space space = gameSystem.getSpace(spaces[uuid]);
 			GridBagConstraints c = new GridBagConstraints();
+
+			
 			c.gridx = i;
 			c.gridy = 0;
+
 			add(space, c);
 		}
 		
 		//Right column
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
-			Space space = new Space(null, null);
+			uuid++;//TODO remember how ++i vs i++ works and combine with line below.
+			Space space = gameSystem.getSpace(spaces[uuid]);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = (NUM_SPACES_PER_SIDE - 1);
 			c.gridy = i;
@@ -254,17 +271,20 @@ public class GameBoard extends JPanel
 		//Bottom row
 		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
 		{
-			Space space = new Space(null, null);
+			uuid++;//TODO remember how ++i vs i++ works and combine with line below.
+			Space space = gameSystem.getSpace(spaces[uuid]);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = i;
 			c.gridy = (NUM_SPACES_PER_SIDE - 1);
+
 			add(space, c);
 		}
 		
 		//Left column
 		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
 		{
-			Space space = new Space(null, null);
+			uuid++;//TODO remember how ++i vs i++ works and combine with line below.
+			Space space = gameSystem.getSpace(spaces[uuid]);
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = i;
@@ -300,12 +320,23 @@ public class GameBoard extends JPanel
 	 * @param gridX	The x-coordinate of the upper-left corner of the "START" space
 	 * @param gridY The y-coordinate of the upper-left corner of the "START" space
 	 */
-	private void initializeStart(Color color, int gridX, int gridY)
+	private void initializeStart(UUID[] startSpaces, Color color, int gridX, int gridY)
 	{
-		TerminalSpace start = new TerminalSpace(null, null, null, TerminalType.START);
+		UUID id = null;
+		for(int i = 0; i<startSpaces.length; i++) {
+			Space space = gameSystem.getSpace(startSpaces[i]);
+			if(color == space.getColor())
+			{
+				id = startSpaces[i];
+				break;
+			}
+		}
+		//TODO error handle id = null. Shouldn't come up though.
+		TerminalSpace start = (TerminalSpace) gameSystem.getSpace(id);
 		
 		//Set "START" size and color
-		start.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
+		int startLength = Space.SIDE_LENGTH * 3; //FIXME: make static?
+		start.setPreferredSize(new Dimension(startLength, startLength));
 		start.setBackground(color);
 		start.setOpaque(true);
 		
@@ -330,19 +361,34 @@ public class GameBoard extends JPanel
 	 * @param x2 The x-coordinate of the last (numerically highest coordinate) safety zone space
 	 * @param y2 The y-coordinate of the last (numerically highest coordinate) safety zone space
 	 */
-	private void initializeSafetyZone(Color color, int x1, int y1, int x2, int y2)
+	private void initializeSafetyZone(UUID[] safeStartSpaces, Color color, int x1, int y1, int x2, int y2)
 	{
+		UUID id = null;
+		for(int i = 0; i<safeStartSpaces.length; i++) {
+			Space space = gameSystem.getSpace(safeStartSpaces[i]);
+			if(color == space.getColor())
+			{
+				id = safeStartSpaces[i];
+				break;
+			}
+		}
+
+		//TODO error handle id = null. Shouldn't come up though.
+		Space safe = gameSystem.getSpace(id);
+		
 		//Vertical safety zone
 		if (x1 == x2)
 		{
 			//For each safety zone space
 			for (int i = y1; i <= y2; ++i)
-			{
-				Space safe = new Space(null, null);
-				
+			{	
 				//Set color
+				
 				safe.setBackground(color);
 				safe.setOpaque(true);
+
+				
+				
 				
 				//Set location
 				GridBagConstraints c = new GridBagConstraints();
@@ -350,6 +396,8 @@ public class GameBoard extends JPanel
 				c.gridy = i;
 				
 				add(safe, c);
+				if(safe.getSafeNextID() != null)
+					safe = gameSystem.getSpace(safe.getSafeNextID());
 			}
 		}
 		
@@ -358,9 +406,7 @@ public class GameBoard extends JPanel
 		{
 			//For each safety zone space
 			for (int i = x1; i <= x2; ++i)
-			{
-				Space safe = new Space(null, null);
-				
+			{				
 				//Set color
 				safe.setBackground(color);
 				safe.setOpaque(true);
@@ -371,6 +417,8 @@ public class GameBoard extends JPanel
 				c.gridy = y1;
 				
 				add(safe, c);
+				if(safe.getSafeNextID() != null)
+					safe = gameSystem.getSpace(safe.getSafeNextID());
 			}	
 		}
 	}
@@ -382,20 +430,37 @@ public class GameBoard extends JPanel
 	 * @param gridX The x-coordinate of the upper-left corner of the "HOME" space
 	 * @param gridY The y-coordinate of the upper-left corner of the "HOME" space
 	 */
-	private void initializeHome(Color color, int gridX, int gridY)
+	private void initializeHome(UUID[] safeStart, Color color, int gridX, int gridY)
 	{
-		TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
+		UUID safeID = null;
+		for(int i = 0; i<safeStart.length; i++) {
+			Space space = gameSystem.getSpace(safeStart[i]);
+			if(color == space.getColor())
+			{
+				safeID = safeStart[i];
+				break;
+			}
+		}
+		
+		UUID id = gameSystem.getSpacesAway(gameSystem.getSpace(safeID), 5);
+		//TODO error handle id = null. Shouldn't come up though.
+		TerminalSpace home = (TerminalSpace) gameSystem.getSpace(id);
+		
+		
+		//TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
 		
 		//Set "HOME" size and color
-		home.setPreferredSize(new Dimension(120, 120)); //FIXME: Use constant?
+		int homeLength = Space.SIDE_LENGTH * 3;
+		home.setPreferredSize(new Dimension(homeLength, homeLength));
 		home.setBackground(color);
 		home.setOpaque(true);
 		
 		//Set "HOME" location
 		//FIXME: Padding
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridwidth = 3; //FIXME: Use constant?
-		c.gridheight = 3; //FIXME: Use constant?
+		int homeGridLength = 3;
+		c.gridwidth = homeGridLength; //FIXME: make static?
+		c.gridheight = homeGridLength; //FIXME: make static?
 		c.gridx = gridX;
 		c.gridy = gridY;
 		

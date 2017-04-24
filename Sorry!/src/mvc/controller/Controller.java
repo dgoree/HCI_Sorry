@@ -1,11 +1,12 @@
 package mvc.controller;
 
-import mvc.view.CardHolder;
+import mvc.view.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 
 import mvc.model.GameSystem;
 
@@ -21,13 +22,36 @@ public class Controller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() instanceof JButton)
+		if(e.getActionCommand().equals(CardHolder.DRAW_CARD_COMMAND))
 		{
-			if(((JButton)e.getSource()).getText().equals("<html><center>" + "Click to draw a card"+"</center></html>"))
+			if(gameSystem.isGameInProgress())
 			{
 				//They clicked a button to draw a card.
-				gameSystem.takeTurn();
+				gameSystem.drawCard();
 			}
+			else
+			{
+				//TODO: notify the user they must start a game?
+			}
+		}
+		else if(e.getActionCommand().equals(GameFrame.NEW_GAME_COMMAND))
+		{
+			if(!gameSystem.isGameInProgress())
+			{
+				gameSystem.newGame();
+			}
+			else
+			{
+				//TODO confirm they want to restart the game.
+				gameSystem.newGame(); 
+			}
+			System.out.println("start a new game"); //debug print. TODO: remove
+		}
+		else if(e.getActionCommand().equals(GameFrame.QUIT_GAME_COMMAND))
+		{
+			//TODO quit game elegantly with posibility of starting a new one without closing the program?
+			System.out.println("game ended"); //debug print. TODO: remove
+			System.exit(0);
 		}
 		
 	}

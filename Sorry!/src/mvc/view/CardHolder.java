@@ -29,6 +29,8 @@ import mvc.model.Listener;
  */
 public class CardHolder extends JLabel implements Listener
 {
+	public static final String DRAW_CARD_COMMAND = "draw card";
+	
 	private static final Color NAVY = new Color(0, 0, 128);
 	private static final int BORDER_WEIGHT = 2;
 	private JButton drawCard;
@@ -59,6 +61,7 @@ public class CardHolder extends JLabel implements Listener
 		drawCard.setOpaque(true);
 		drawCard.setBorderPainted(false);
 		drawCard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		drawCard.setActionCommand(DRAW_CARD_COMMAND);
 		drawCard.addActionListener(controller);
 		
 		this.add(drawCard);
@@ -92,7 +95,7 @@ public class CardHolder extends JLabel implements Listener
 			{
 				image = new ImageIcon("images/Card_" + cardNum +".jpg");
 			}
-			Image scaledImage = image.getImage().getScaledInstance(160, 240, Image.SCALE_SMOOTH);
+			Image scaledImage = image.getImage().getScaledInstance(160, 240, Image.SCALE_SMOOTH); //FIXME: constants?
 			image = new ImageIcon(scaledImage);
 			this.setIcon(image);
 		}

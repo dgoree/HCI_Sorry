@@ -18,25 +18,12 @@ public class TerminalSpace extends Space{
 	public TerminalSpace() {
 		super(null,null);
 	}
-
-	//fully customizable
-	public TerminalSpace(Space previous, Space next, Color color, TerminalType type) {
-		super(previous, next, color);
-		this.tokens = new ArrayList<Token>();
-		this.type = type;
-	}
 	
-	//fully customizable - boolean added to keep compiler happy
-	public TerminalSpace(UUID previous, UUID next, Color color, TerminalType type, boolean b) {
+	//fully customizable
+	public TerminalSpace(UUID previous, UUID next, Color color, TerminalType type) {
 		super(previous, next, color);
 		this.tokens = new ArrayList<Token>();
 		this.type = type;
-	}
-		
-	public TerminalSpace deepCopy() {
-		TerminalSpace copy = new TerminalSpace(this.previous, this.next, this.color, this.type);
-		copy.setTokens(this.tokens);
-		return copy;
 	}
 	
 	@Override

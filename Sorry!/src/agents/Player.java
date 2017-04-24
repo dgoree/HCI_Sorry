@@ -7,6 +7,7 @@ import gameItems.Token;
 import spaces.Space;
 import spaces.TerminalSpace;
 import utilities.Color;
+import utilities.TerminalType;
 
 
 public class Player {
@@ -26,8 +27,13 @@ public class Player {
 	
 	public void calcMoves(ArrayList<Player> players, int cardNumber) {
 		
-		//sevens can't be handled individually
+		//sevens have to be handled specially
 		if(cardNumber == 7) {
+			//any one token can move seven
+			for(Token t: tokens) {
+				t.setMoves(findSimpleMoves(t, 7, true));
+			}
+			//two tokens can split the seven spaces
 			findSplitMoves();
 		}
 		
@@ -39,6 +45,7 @@ public class Player {
 					//move to any non-safe space containing an opponent's token
 					t.setMoves(findOpponentTokens(players));
 				}
+				else t.setMoves(new ArrayList<UUID>());
 				break;
 			case 1:
 				//move forward 1
@@ -81,8 +88,8 @@ public class Player {
 			case 11:
 				//move 11
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
-				//swap with opponent (requires token not to be in start)
-				if(t.getSpaceID() != startSpace) {
+				//swap with opponent (requires token not to be in start or safety zone)
+				if(t.getSpaceID() != startSpace && !hashMap.get(t.getSpaceID()).isSafe()) {
 					t.addMoves(findOpponentTokens(players));
 				}
 				break;
@@ -127,23 +134,43 @@ public class Player {
 		//the space must be the start of a slide of a different color
 		if(count == numMoves &&
 		   space != null &&
-		   (!findMyTokens().contains(space.getId()) || (space.getSlideToID() != null && space.getColor() != color))) {
+		   (!findMyTokens().contains(space.getId()))) { // || (space.getSlideToID() != null && space.getColor() != color))) {
 			moveOptions.add(space.getId());
 		}
 		return moveOptions;
 	}
 	
-	//TODO
+	//calculate all possible move combinations of exactly two tokens totaling 7 spaces
 	public void findSplitMoves() {
-		for(Token t: tokens) {
-			t.setMoves(new ArrayList<UUID>());
+		ArrayList<UUID> t1_moves;
+		ArrayList<UUID> t2_moves;
+		for(int token1=0; token1<3; token1++) {
+			for(int token2=token1+1; token2<3; token2++) {
+				for(int n=1; n<=6; n++) {
+					//If token1 can move n spaces and token2 can move 7-n spaces, these moves are valid.
+					t1_moves = findSimpleMoves(tokens[token1],n,true);
+					if(!t1_moves.isEmpty()) {
+						t2_moves = findSimpleMoves(tokens[token2],7-n,true);
+						if(!t2_moves.isEmpty()) {
+							tokens[token1].addMoves(t1_moves);
+							tokens[token2].addMoves(t2_moves);
+						}
+					}
+					
+				}
+			}
 		}
 	}
 	
+	//get IDs of locations of all this player's tokens, except those in home
 	public ArrayList<UUID> findMyTokens() {
 		ArrayList<UUID> tokenIDs = new ArrayList<UUID>();
+		Token t;
 		for(int token=0;token<4;token++) {
-			tokenIDs.add(tokens[token].getSpaceID());
+			t = tokens[token];
+			if(!((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME))) {
+				tokenIDs.add(t.getSpaceID());
+			}
 		}
 		return tokenIDs;
 	}
