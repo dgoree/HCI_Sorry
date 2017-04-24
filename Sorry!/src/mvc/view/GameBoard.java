@@ -481,6 +481,7 @@ public class GameBoard extends JPanel implements Listener
 	
 	/**
 	 * Display each player's four tokens on the game board
+	 * TODO: How to display four tokens in start and home
 	 */
 	private void displayTokens()
 	{
@@ -510,6 +511,7 @@ public class GameBoard extends JPanel implements Listener
 	{
 		displayTokens();
 		
+		//FIXME: "No possible moves" message dialog
 //		if(gameSystem.getNoPossibleMoves())
 //		{
 //			JOptionPane.showMessageDialog(this, "You have no possible moves. :(", "No possible moves", JOptionPane.PLAIN_MESSAGE);

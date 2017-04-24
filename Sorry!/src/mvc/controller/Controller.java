@@ -34,9 +34,11 @@ public class Controller implements ActionListener, MouseListener
 	
 	/**
 	 * Advances turn to next player and allows player to draw a card
+	 * FIXME: Buggy! Not correctly reverting deck to draw button. Skipping turns.
 	 */
 	private void advanceTurn()
 	{
+		//Note: showCard set to false in GameSystem moveToken method
 		//gameSystem.setShowCard(false);
 		gameSystem.advanceTurn();
 
@@ -77,9 +79,9 @@ public class Controller implements ActionListener, MouseListener
 					//Alert player
 					System.out.println("No possible moves."); //debug print TODO: remove
 					gameSystem.setNoPossibleMoves(true);
+					//FIXME: fix alert message in view
 					
 					//Advance turn
-					gameSystem.setShowCard(false);
 					advanceTurn();
 					
 					System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove
@@ -127,14 +129,17 @@ public class Controller implements ActionListener, MouseListener
 	}
 
 	/**
-	 * TODO: Description
-	 * @param e
+	 * Highlight possible moves when current player clicks on one of his own tokens.
+	 * Move token when player clicks on a destination space.
+	 * 
+	 * @param e the MouseEvent
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
 		Space spaceClicked = (Space) e.getSource(); //Only added MouseListeners to spaces
 		
+		//FIXME: destination space will be occupied by token for SORRY card
 		//If player clicked a space occupied by a token
 		if (spaceClicked.getIcon() != null)
 		{			
@@ -143,9 +148,7 @@ public class Controller implements ActionListener, MouseListener
 			
 			//If player clicked a space occupied by own token
 			if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
-			{
-				System.out.println("You clicked your own token!");
-				
+			{				
 				//Get corresponding token
 				for(Token token : currentPlayerTokens)
 				{
@@ -156,48 +159,34 @@ public class Controller implements ActionListener, MouseListener
 				}
 				
 				//Show token's possible moves
+				//FIXME: Set color of spaces back to white
 				ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
 				for(UUID move : selectedTokenMoves)
 				{
-					gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: fix color
+					gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
 				}
-			}
-			
-			//Else player clicked opponent token
-			else
-			{
-				//Do nothing
-				System.out.println("You clicked someone else's token.");
 			}
 		}
 		
 		//Else user clicked an unoccupied space
 		else
-		{
-			System.out.println("You clicked a space!");
-			
+		{			
 			//If user clicked a destination space
 			if (currentPlayerMoves.contains(spaceClicked.getId()))
-			{
-				System.out.println("You clicked a destination space!");
+			{				
+				//Save current location of token
+				UUID tokenPrevLocation = selectedToken.getSpaceID();
 				
 				//Move token to destination space
 				gameSystem.moveToken(selectedToken, spaceClicked.getId());
 				
+				//Remove icon from token's previous location
+				//FIXME: Removes icon from start if other pieces still in start
+				gameSystem.getSpace(tokenPrevLocation).setIcon(null);
+				
 				//Advance turn
 				advanceTurn();	
-			}
-			
-			//Else user clicked a generic space
-			else
-			{
-				//Do nothing
-				System.out.println("You clicked some random space");
-			}
-
-			
-
-			
+			}	
 		}
 	}
 
