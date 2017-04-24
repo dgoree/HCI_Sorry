@@ -1,22 +1,54 @@
 package mvc.controller;
 
 import mvc.view.*;
+import spaces.Space;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-
+import agents.Player;
+import gameItems.Token;
 import mvc.model.GameSystem;
 
-public class Controller implements ActionListener
+public class Controller implements ActionListener, MouseListener
 {
 	private final GameSystem gameSystem;
+	
+	private Player currentPlayer;
+	private Token currentPlayerTokens[];
+	private UUID currentPlayerTokenIDs[];
+	private ArrayList<UUID> currentPlayerMoves;
+	private Token selectedToken;
 	
 	public Controller(final GameSystem gameSystem)
 	{
 		this.gameSystem = gameSystem;
+	}
+	
+	/**
+	 * Advances turn to next player and allows player to draw a card
+	 */
+	private void advanceTurn()
+	{
+		//gameSystem.setShowCard(false);
+		gameSystem.advanceTurn();
+
+		//Update current player
+		currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
+		currentPlayerTokens = currentPlayer.getTokens();
+		currentPlayerTokenIDs = new UUID[currentPlayerTokens.length];
+		for(int i = 0; i < currentPlayerTokens.length; i++)
+		{
+			currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
+		}
+		currentPlayerMoves = new ArrayList<UUID>(); //No moves before card has been drawn
 	}
 
 	@Override
@@ -28,6 +60,30 @@ public class Controller implements ActionListener
 			{
 				//They clicked a button to draw a card.
 				gameSystem.drawCard();
+				
+				//Get all possible moves across each token for current player
+				for(Token token : currentPlayerTokens)
+				{
+					ArrayList<UUID> tokenMoves = token.getMoves();
+					for(UUID move : tokenMoves)
+					{
+						currentPlayerMoves.add(move);
+					}
+				}
+				
+				//If current player has no possible moves, alert player then advance turn
+				if(currentPlayerMoves.isEmpty())
+				{
+					//Alert player
+					System.out.println("No possible moves."); //debug print TODO: remove
+					gameSystem.setNoPossibleMoves(true);
+					
+					//Advance turn
+					gameSystem.setShowCard(false);
+					advanceTurn();
+					
+					System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove
+				}	
 			}
 			else
 			{
@@ -38,22 +94,123 @@ public class Controller implements ActionListener
 		{
 			if(!gameSystem.isGameInProgress())
 			{
+				//Start new game
 				gameSystem.newGame();
+				System.out.println("start a new game"); //debug print. TODO: remove
+				
+				//Initialize current player to first player
+				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
+				currentPlayerTokens = currentPlayer.getTokens();
+				currentPlayerTokenIDs = new UUID[currentPlayerTokens.length];
+				for(int i = 0; i < currentPlayerTokens.length; i++)
+				{
+					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
+				}
+				currentPlayerMoves = new ArrayList<UUID>(); //No moves before card has been drawn
+				
+				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove	
 			}
 			else
 			{
 				//TODO confirm they want to restart the game.
 				gameSystem.newGame(); 
 			}
-			System.out.println("start a new game"); //debug print. TODO: remove
+
 		}
 		else if(e.getActionCommand().equals(GameFrame.QUIT_GAME_COMMAND))
 		{
-			//TODO quit game elegantly with posibility of starting a new one without closing the program?
+			//TODO quit game elegantly with possibility of starting a new one without closing the program?
 			System.out.println("game ended"); //debug print. TODO: remove
 			System.exit(0);
 		}
 		
 	}
+
+	/**
+	 * TODO: Description
+	 * @param e
+	 */
+	@Override
+	public void mouseClicked(MouseEvent e) 
+	{
+		Space spaceClicked = (Space) e.getSource(); //Only added MouseListeners to spaces
+		
+		//If player clicked a space occupied by a token
+		if (spaceClicked.getIcon() != null)
+		{			
+			//Convert array to list
+			List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
+			
+			//If player clicked a space occupied by own token
+			if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
+			{
+				System.out.println("You clicked your own token!");
+				
+				//Get corresponding token
+				for(Token token : currentPlayerTokens)
+				{
+					if (token.getSpaceID() == spaceClicked.getId())
+					{
+						selectedToken = token;
+					}
+				}
+				
+				//Show token's possible moves
+				ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
+				for(UUID move : selectedTokenMoves)
+				{
+					gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: fix color
+				}
+			}
+			
+			//Else player clicked opponent token
+			else
+			{
+				//Do nothing
+				System.out.println("You clicked someone else's token.");
+			}
+		}
+		
+		//Else user clicked an unoccupied space
+		else
+		{
+			System.out.println("You clicked a space!");
+			
+			//If user clicked a destination space
+			if (currentPlayerMoves.contains(spaceClicked.getId()))
+			{
+				System.out.println("You clicked a destination space!");
+				
+				//Move token to destination space
+				gameSystem.moveToken(selectedToken, spaceClicked.getId());
+				
+				//Advance turn
+				advanceTurn();	
+			}
+			
+			//Else user clicked a generic space
+			else
+			{
+				//Do nothing
+				System.out.println("You clicked some random space");
+			}
+
+			
+
+			
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 
 }

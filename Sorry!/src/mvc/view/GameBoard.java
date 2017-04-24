@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import agents.Player;
@@ -27,6 +28,7 @@ public class GameBoard extends JPanel implements Listener
 	//The number of spaces along a side of the square game board
 	private static final int NUM_SPACES_PER_SIDE = 16;
 	private final GameSystem gameSystem;
+	private final Controller controller;
 	
 	/**
 	 * Constructs the game board
@@ -35,6 +37,7 @@ public class GameBoard extends JPanel implements Listener
 	public GameBoard(GameSystem gameSystem, Controller controller) throws IOException 
 	{
 		this.gameSystem = gameSystem;
+		this.controller = controller;
 		gameSystem.addListener(this);
 		setLayout(new GridBagLayout());
 		
@@ -254,11 +257,10 @@ public class GameBoard extends JPanel implements Listener
 			uuid++;//TODO remember how ++i vs i++ works and combine with line below.
 			Space space = gameSystem.getSpace(spaces[uuid]);
 			GridBagConstraints c = new GridBagConstraints();
-
-			
 			c.gridx = i;
 			c.gridy = 0;
 
+			space.addMouseListener(controller); //TODO: Can this be done in the Space class?
 			add(space, c);
 		}
 		
@@ -270,6 +272,8 @@ public class GameBoard extends JPanel implements Listener
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = (NUM_SPACES_PER_SIDE - 1);
 			c.gridy = i;
+			
+			space.addMouseListener(controller); //TODO: Can this be done in the Space class?
 			add(space, c);
 		}
 		
@@ -281,7 +285,8 @@ public class GameBoard extends JPanel implements Listener
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = i;
 			c.gridy = (NUM_SPACES_PER_SIDE - 1);
-
+			
+			space.addMouseListener(controller); //TODO: Can this be done in the Space class?
 			add(space, c);
 		}
 		
@@ -293,6 +298,8 @@ public class GameBoard extends JPanel implements Listener
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = i;
+			
+			space.addMouseListener(controller); //TODO: Can this be done in the Space class?
 			add(space, c);
 		}
 	}
@@ -354,6 +361,7 @@ public class GameBoard extends JPanel implements Listener
 		c.gridx = gridX;
 		c.gridy = gridY;
 		
+		start.addMouseListener(controller); //TODO: Can this be done in the Space class?
 		add(start, c);
 	}
 	
@@ -388,18 +396,15 @@ public class GameBoard extends JPanel implements Listener
 			for (int i = y1; i <= y2; ++i)
 			{	
 				//Set color
-				
 				safe.setBackground(color);
 				safe.setOpaque(true);
 
-				
-				
-				
 				//Set location
 				GridBagConstraints c = new GridBagConstraints();
 				c.gridx = x1;
 				c.gridy = i;
 				
+				safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
 				add(safe, c);
 				if(safe.getSafeNextID() != null)
 					safe = gameSystem.getSpace(safe.getSafeNextID());
@@ -421,6 +426,7 @@ public class GameBoard extends JPanel implements Listener
 				c.gridx = i;
 				c.gridy = y1;
 				
+				safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
 				add(safe, c);
 				if(safe.getSafeNextID() != null)
 					safe = gameSystem.getSpace(safe.getSafeNextID());
@@ -469,6 +475,7 @@ public class GameBoard extends JPanel implements Listener
 		c.gridx = gridX;
 		c.gridy = gridY;
 		
+		home.addMouseListener(controller); //TODO: Can this be done in the Space class?
 		add(home, c);	
 	}
 	
@@ -501,6 +508,12 @@ public class GameBoard extends JPanel implements Listener
 	@Override
 	public void updated() 
 	{
-		displayTokens();	
+		displayTokens();
+		
+//		if(gameSystem.getNoPossibleMoves())
+//		{
+//			JOptionPane.showMessageDialog(this, "You have no possible moves. :(", "No possible moves", JOptionPane.PLAIN_MESSAGE);
+//		}
+
 	}
 }

@@ -27,6 +27,7 @@ public class GameSystem {
 	private Card thisCard;
 	private boolean showCard;
 	private boolean gameInProgress;
+	private boolean noPossibleMoves = false;
 	private List<Listener> listeners = new ArrayList<Listener>();
 		
 	public GameSystem() {
@@ -213,7 +214,7 @@ public class GameSystem {
 	}
 	
 	//move a token and return true if game is over
-	public boolean moveToken(int t, UUID destination) {
+	public boolean moveToken(Token token, UUID destination) {
 		//remove any players occupying destination space
 		evict(destination);
 		//perform slide if necessary
@@ -225,7 +226,7 @@ public class GameSystem {
 			}
 		}
 		//move token to end of slide
-		players.get(turn).getTokens()[t].setSpaceID(destination);
+		token.setSpaceID(destination);
 		
 		showCard = false;
 		
@@ -244,6 +245,7 @@ public class GameSystem {
 			turn=0;
 		}
 		
+		notifyListeners();
 		return false;
 	}
 	
@@ -304,6 +306,12 @@ public class GameSystem {
 	public void setTurn(int turn) {
 		this.turn = turn;
 	}
+	
+	//Ryan
+	public void advanceTurn() 
+	{
+		turn = (turn + 1) % 4;	
+	}
 
 	public Deck getStock() {
 		return stock;
@@ -358,6 +366,13 @@ public class GameSystem {
 		return showCard;
 	}
 	
+	//Ryan
+	public void setShowCard(boolean showCard)
+	{
+		this.showCard = showCard;
+		notifyListeners();
+	}
+	
 	public boolean isGameInProgress()
 	{
 		return gameInProgress;
@@ -398,6 +413,19 @@ public class GameSystem {
 	
 	public HashMap<UUID, Space> getHashMap() {
 		return hashMap;
+	}
+	
+	//Ryan
+	public boolean getNoPossibleMoves()
+	{
+		return noPossibleMoves;
+	}
+	
+	//Ryan
+	public void setNoPossibleMoves(boolean noPossibleMoves)
+	{
+		this.noPossibleMoves = noPossibleMoves;
+		notifyListeners();
 	}
 
 	public void addListener(final Listener listener)
