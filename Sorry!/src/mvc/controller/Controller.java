@@ -64,6 +64,11 @@ public class Controller implements ActionListener, MouseListener
 				//They clicked a button to draw a card.
 				gameSystem.drawCard();
 				
+				int debug = gameSystem.getCardNum();
+				if(debug == 0) {
+					int stop = 0;
+				}
+				
 				//Get all possible moves across each token for current player
 				for(Token token : currentPlayerTokens)
 				{
@@ -80,7 +85,7 @@ public class Controller implements ActionListener, MouseListener
 					//Alert player
 					System.out.println("No possible moves."); //debug print TODO: remove
 					gameSystem.setNoPossibleMoves(true);
-					JOptionPane.showMessageDialog(null, "You have no possible moves. :(", "No possible moves", JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.showMessageDialog(null, "You have no possible moves.", "Forfeit Your Turn", JOptionPane.PLAIN_MESSAGE);
 					
 					//Advance turn
 					advanceTurn();
@@ -140,39 +145,32 @@ public class Controller implements ActionListener, MouseListener
 	{
 		Space spaceClicked = (Space) e.getSource(); //Only added MouseListeners to spaces
 		
-		//FIXME: destination space will be occupied by token for SORRY card
-		//If player clicked a space occupied by a token
-		if (spaceClicked.getIcon() != null)
-		{			
-			//Convert array to list
-			List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
+		//Convert array to list
+		List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
 			
-			//If player clicked a space occupied by own token
-			if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
-			{				
-				//Get corresponding token
-				for(Token token : currentPlayerTokens)
+		//If player clicked a space occupied by own token
+		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
+		{				
+			//Get corresponding token
+			for(Token token : currentPlayerTokens)
+			{
+				if (token.getSpaceID() == spaceClicked.getId())
 				{
-					if (token.getSpaceID() == spaceClicked.getId())
-					{
-						selectedToken = token;
-					}
-				}
-				
-				//Show token's possible moves
-				//FIXME: Set color of spaces back to white
-				ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
-				for(UUID move : selectedTokenMoves)
-				{
-					gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
+					selectedToken = token;
 				}
 			}
+			
+			//Show token's possible moves
+			//FIXME: Set color of spaces back to white
+			ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
+			for(UUID move : selectedTokenMoves)
+			{
+				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
+			}
 		}
-		
-		//Else user clicked an unoccupied space
 		else
 		{			
-			//If user clicked a destination space
+			//Check if user clicked a legal destination space
 			if (currentPlayerMoves.contains(spaceClicked.getId()))
 			{				
 				//Save current location of token
