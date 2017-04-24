@@ -509,13 +509,6 @@ public class GameBoard extends JPanel implements Listener
 	@Override
 	public void updated() 
 	{
-		displayTokens();
-		
-		//FIXME: "No possible moves" message dialog
-//		if(gameSystem.getNoPossibleMoves())
-//		{
-//			JOptionPane.showMessageDialog(this, "You have no possible moves. :(", "No possible moves", JOptionPane.PLAIN_MESSAGE);
-//		}
-
+		displayTokens();	
 	}
 }

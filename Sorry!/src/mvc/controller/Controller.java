@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JOptionPane;
 
 import agents.Player;
 import gameItems.Token;
@@ -38,8 +41,6 @@ public class Controller implements ActionListener, MouseListener
 	 */
 	private void advanceTurn()
 	{
-		//Note: showCard set to false in GameSystem moveToken method
-		//gameSystem.setShowCard(false);
 		gameSystem.advanceTurn();
 
 		//Update current player
@@ -79,7 +80,7 @@ public class Controller implements ActionListener, MouseListener
 					//Alert player
 					System.out.println("No possible moves."); //debug print TODO: remove
 					gameSystem.setNoPossibleMoves(true);
-					//FIXME: fix alert message in view
+					JOptionPane.showMessageDialog(null, "You have no possible moves. :(", "No possible moves", JOptionPane.PLAIN_MESSAGE);
 					
 					//Advance turn
 					advanceTurn();

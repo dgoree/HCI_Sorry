@@ -228,21 +228,10 @@ public class GameSystem {
 		//move token to end of slide
 		token.setSpaceID(destination);
 		
-		showCard = false;
-		
 		//end game, or go to next turn
 		if(checkGameOver()) {
 			System.out.println("Player " + turn + " wins!"); //FIXME: temp; should be done via UI. Listen to gameInProgress variable?
 			return true;
-		}
-		
-		//give this player another turn if a 2 is played
-		else if(thisCard.getNumber() == 2) {
-			return false;
-		}
-		//otherwise, go to next player's turn
-		else if(++turn >= 4) {
-			turn=0;
 		}
 		
 		notifyListeners();
@@ -307,10 +296,14 @@ public class GameSystem {
 		this.turn = turn;
 	}
 	
-	//Ryan
 	public void advanceTurn() 
 	{
-		turn = (turn + 1) % 4;	
+		setShowCard(false);
+		//go to next player's turn unless a 2 was played
+		if(thisCard.getNumber() != 2) {
+			turn = (turn + 1) % 4;
+		}
+		notifyListeners();
 	}
 
 	public Deck getStock() {
