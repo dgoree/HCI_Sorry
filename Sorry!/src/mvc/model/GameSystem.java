@@ -22,27 +22,29 @@ public class GameSystem {
 	private Deck stock;
 	private Deck discard;
 	private UUID[] startSpaces = new UUID[4];
+	private UUID[] safeZoneStartSpaces = new UUID[4];
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
 	private Card thisCard;
 	private boolean showCard;
+	private boolean gameInProgress;
 	private List<Listener> listeners = new ArrayList<Listener>();
-	
+		
 	public GameSystem() {
+		this.gameInProgress = false;
 		buildGameBoard();
-		playGame(); //disabled for now because there are errors in findSimpleMoves()
 	}
 	
 	public void buildGameBoard() {
 		//create start spaces
 		TerminalSpace ts;
 		for(int i=0;i<4;i++) {
-			ts = new TerminalSpace(null, null, Color.values()[i], TerminalType.START, true); 
+			ts = new TerminalSpace(null, null, Color.values()[i], TerminalType.START); 
 			startSpaces[i] = ts.getId();
 			hashMap.put(ts.getId(), ts);
 		}
 		
 		//create and link 60 perimeter squares with no properties
-		Space firstSpace = new Space(null,null, true);
+		Space firstSpace = new Space(null,null);
 		hashMap.put(firstSpace.getId(), firstSpace);
 		Space currentSpace = addSpace(firstSpace.getId(), null);
 		for(int i=0;i<58;i++) {
@@ -54,50 +56,53 @@ public class GameSystem {
 		
 		//create safe zones
 		//red
-		Space firstSafeRed = new Space(null, null, true);
+		Space firstSafeRed = new Space(null, null, Color.RED);
 		hashMap.put(firstSafeRed.getId(), firstSafeRed);
 		Space currentSafe = addSafeSpace(firstSafeRed.getId(), null, Color.RED);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.RED);
 		}
-		TerminalSpace homeRed = new TerminalSpace(currentSafe, null, Color.RED, TerminalType.HOME);
+		TerminalSpace homeRed = new TerminalSpace(currentSafe.getId(), null, Color.RED, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeRed.getId());
 		hashMap.put(homeRed.getId(), homeRed);
 		
 		//blue
-		Space firstSafeBlue = new Space(null, null, true);
+		Space firstSafeBlue = new Space(null, null, Color.BLUE);
 		hashMap.put(firstSafeBlue.getId(), firstSafeBlue);
 		currentSafe = addSafeSpace(firstSafeBlue.getId(), null, Color.BLUE);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.BLUE);
 		}
-		TerminalSpace homeBlue = new TerminalSpace(currentSafe, null, Color.BLUE, TerminalType.HOME);
+		TerminalSpace homeBlue = new TerminalSpace(currentSafe.getId(), null, Color.BLUE, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeBlue.getId());
 		hashMap.put(homeBlue.getId(), homeBlue);
 		
 		//yellow
-		Space firstSafeYellow = new Space(null, null, true);
+		Space firstSafeYellow = new Space(null, null, Color.YELLOW);
 		hashMap.put(firstSafeYellow.getId(), firstSafeYellow);
 		currentSafe = addSafeSpace(firstSafeYellow.getId(), null, Color.YELLOW);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.YELLOW);
 		}
-		TerminalSpace homeYellow = new TerminalSpace(currentSafe, null, Color.YELLOW, TerminalType.HOME);
+		TerminalSpace homeYellow = new TerminalSpace(currentSafe.getId(), null, Color.YELLOW, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeYellow.getId());
 		hashMap.put(homeYellow.getId(), homeYellow);
 		
 		//green
-		Space firstSafeGreen = new Space(null, null, true);
+		Space firstSafeGreen = new Space(null, null, Color.GREEN);
 		hashMap.put(firstSafeGreen.getId(), firstSafeGreen);
 		currentSafe = addSafeSpace(firstSafeGreen.getId(), null, Color.GREEN);
 		for(int i=0;i<3;i++) {
 			currentSafe = addSafeSpace(currentSafe.getId(), null, Color.GREEN);
 		}
-		TerminalSpace homeGreen = new TerminalSpace(currentSafe, null, Color.GREEN, TerminalType.HOME);
+		TerminalSpace homeGreen = new TerminalSpace(currentSafe.getId(), null, Color.GREEN, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeGreen.getId());
 		hashMap.put(homeGreen.getId(), homeGreen);
 		
-		UUID[] safeZoneStartSpaces = {firstSafeRed.getId(), firstSafeBlue.getId(), firstSafeYellow.getId(), firstSafeGreen.getId()};
+		safeZoneStartSpaces[0] = firstSafeRed.getId();
+		safeZoneStartSpaces[1] = firstSafeBlue.getId();
+		safeZoneStartSpaces[2] = firstSafeYellow.getId();
+		safeZoneStartSpaces[3] = firstSafeGreen.getId();
 		
 		//let firstSpace be the start of the red slide by red's home.
 		//assign color, slide, and safeNext properties
@@ -113,9 +118,7 @@ public class GameSystem {
 			//coming out space
 			currentSpace = hashMap.get(hashMap.get(currentSpace.getNextID()).getNextID());
 			currentSpace.setStartPreviousID(startSpaces[color]);
-			Space debug = hashMap.get(startSpaces[color]);
 			hashMap.get(startSpaces[color]).setNextID(currentSpace.getId());
-			debug = hashMap.get(startSpaces[color]);
 			//second slide
 			for(int i=0;i<5;i++) {
 				currentSpace = hashMap.get(currentSpace.getNextID());
@@ -130,49 +133,22 @@ public class GameSystem {
 	}
 	
 	public Space addSpace(UUID prev, UUID next) {
-		 Space newSpace = new Space(prev, next, true);
+		 Space newSpace = new Space(prev, next);
 		 hashMap.put(newSpace.getId(), newSpace);
 		 if(prev != null) hashMap.get(prev).setNextID(newSpace.getId());
 		 if(next != null) hashMap.get(next).setPreviousID(newSpace.getId());
-		 return newSpace;
-	}
-	
-	public Space addSpace(Space prev, Space next) {
-		 Space newSpace = new Space(prev, next);
-		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) prev.setNext(newSpace);
-		 if(next != null) next.setPrevious(newSpace);
 		 return newSpace;
 	}
 	
 	public Space addSafeSpace(UUID prev, UUID next, Color color) {
 		 Space newSpace = new Space(prev, next, color);
 		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) hashMap.get(prev).setNextID(newSpace.getId());
+		 if(prev != null) hashMap.get(prev).setSafeNextID(newSpace.getId());
 		 if(next != null) hashMap.get(next).setPreviousID(newSpace.getId());
 		 return newSpace;
 	}
 	
-	public Space addSafeSpace(Space prev, Space next, Color color) {
-		 Space newSpace = new Space(prev, next, color);
-		 hashMap.put(newSpace.getId(), newSpace);
-		 if(prev != null) prev.setNext(newSpace);
-		 if(next != null) next.setPrevious(newSpace);
-		 return newSpace;
-	}
-	
-	//should be called if the user chooses New Game from the menu
-	public void playGame() {
-		setupGame();
-		
-		//play until someone wins
-		boolean gameOver = false;
-		while(!gameOver) {
-			gameOver = takeTurn();
-		}
-	}
-	
-	public void setupGame() {
+	public void newGame() {
 		this.turn = 0;
 		this.stock = new Deck(true);
 		this.discard = new Deck(false);
@@ -185,6 +161,7 @@ public class GameSystem {
 	
 	//setup names and place all tokens in respective starts
 	public void setupPlayers() {
+		players.clear(); //all data needs to be erased in case this is not the first game
 		Token[][] tokens = new Token[4][4]; //player/color, token number
 		Player p;
 		
@@ -202,10 +179,8 @@ public class GameSystem {
 	}
 	
 	
-	/**
-	*  Return true if the game is over
-	*/
-	public boolean takeTurn() {
+	//Return true if there is an available move
+	public boolean drawCard() {
 		//draw a card and manage the deck
 		thisCard = stock.remove(0);
 		//Maria made a couple changes here to make the card number more easily accessible to the view.
@@ -223,42 +198,21 @@ public class GameSystem {
 		//calculate all available move options
 		players.get(turn).calcMoves(players, thisCard.getNumber());
 		
-		//TODO: display options and move the token of the player's choosing
+		//determine if there are any valid moves
 		ArrayList<UUID> moveOptions;
 		for(int token=0;token<4;token++) {
 			moveOptions = players.get(turn).getTokens()[token].getMoves();
 			
-			//TODO: display options and get user choice
-			
-			//for now: move first available token
 			if(!moveOptions.isEmpty()) {
-				moveToken(token, moveOptions.get(0));
-				break;
+				return true;
 			}
-		}
-		
-		showCard = false;
-		
-		//end game, or go to next turn
-		if(checkGameOver()) {
-			System.out.println("Player " + turn + " wins!"); //temp; should be done via UI
-			return true;
-		}
-		//give this player another turn if a 2 is played
-		else if(thisCard.getNumber() == 2) {
-			return false;
-		}
-		//otherwise, go to next player's turn
-		else if(++turn >= 4) {
-			turn=0;
 		}
 		return false;
 	}
 	
-	public void moveToken(int t, UUID destination) {
-		//move token to destination
-		players.get(turn).getTokens()[t].setSpaceID(destination);
-		//remove any players occupying this space
+	//move a token and return true if game is over
+	public boolean moveToken(int t, UUID destination) {
+		//remove any players occupying destination space
 		evict(destination);
 		//perform slide if necessary
 		UUID slideToID = hashMap.get(destination).getSlideToID(); 
@@ -270,6 +224,25 @@ public class GameSystem {
 		}
 		//move token to end of slide
 		players.get(turn).getTokens()[t].setSpaceID(destination);
+		
+		showCard = false;
+		
+		//end game, or go to next turn
+		if(checkGameOver()) {
+			System.out.println("Player " + turn + " wins!"); //FIXME: temp; should be done via UI. Listen to gameInProgress variable?
+			return true;
+		}
+		
+		//give this player another turn if a 2 is played
+		else if(thisCard.getNumber() == 2) {
+			return false;
+		}
+		//otherwise, go to next player's turn
+		else if(++turn >= 4) {
+			turn=0;
+		}
+		
+		return false;
 	}
 	
 	//remove any tokens occupying the space with this id.
@@ -277,12 +250,49 @@ public class GameSystem {
 	public void evict(UUID id) {
 		for(int player=0; player<4; player++) {
 			for(int tok=0; tok<4; tok++) {
-				//bump back to start if occupied
-				if(players.get(player).getTokens()[tok].getSpaceID() == id) {
+				//bump back to start if occupied and not in home
+				if((players.get(player).getTokens()[tok].getSpaceID() == id) && !inHome(players.get(player).getTokens()[tok])) {
 					players.get(player).getTokens()[tok].setSpaceID(startSpaces[player]);
 				}
 			}
 		}
+	}
+	
+	//creates an array of all the UUIDs used (except start spaces)
+	//indices 0-59: IDs of perimeter squares, starting at top left corner and going clockwise
+	//indices 60-83: IDs of safe zones, from fork to home, in this order: Y, G, R, B
+	public UUID[] getSpaceIDs() {
+		UUID[] ids = new UUID[84];
+		UUID id = startSpaces[1]; //blue start space
+		//iterate to to left corner
+		for(int i=0; i<12; i++) {
+			id = hashMap.get(id).getNextID();
+		}
+		//add 60 perimeter IDs to the array
+		for(int i=0; i<60; i++) {
+			ids[i] = id;
+			id = hashMap.get(id).getNextID();
+		}
+		//add safe zone IDs to the array
+		int[] safeZoneOrder = {2,3,0,1}; //Y,G,R,B
+		int index = 60;
+		for(int i:safeZoneOrder) {
+			id = safeZoneStartSpaces[i];
+			ids[index++] = id;
+			for(int j=0; j<5; j++) {
+				id = hashMap.get(id).getSafeNextID();
+				ids[index++] = id;
+			}
+		}
+		return ids;
+	}
+	
+	public UUID[] getStartIDs() {
+		return startSpaces;
+	}
+	
+	public UUID[] getSafeZoneStartSpaces() {
+		return safeZoneStartSpaces;
 	}
 
 	public int getTurn() {
@@ -325,8 +335,9 @@ public class GameSystem {
 			//debug
 			if(t.getSpaceID() == startSpaces[turn]) debug_s++;
 		}
-		//if(debug_s < 2) System.out.println("P" + turn + "S: " + debug_s);
-		if(debug_h > 0) System.out.println("P" + turn + "H: " + debug_h);
+		//if(debug_s < 2)
+		//System.out.println("P" + turn + " Start: " + debug_s);
+		//if(debug_h > 0) System.out.println("P" + turn + " Home: " + debug_h);
 		return gameOver;
 	}
 	
@@ -345,6 +356,48 @@ public class GameSystem {
 		return showCard;
 	}
 	
+	public boolean isGameInProgress()
+	{
+		return gameInProgress;
+	}
+	
+	public Space getSpace(UUID id)
+	{
+		return hashMap.get(id);
+	}
+	
+	//TODO test me
+	public int getDistance(Space space1, Space space2) {
+		if(space1.equals(space2))
+			return 0;		
+		return 1 + getDistance(getSpace(space1.getNextID()), space2);
+	}
+	
+
+	//TODO test me
+	public UUID getSpacesAway(Space space, int distance) {
+		if(distance == 0)
+			return space.getId();
+		else if(getSpace(space.getNextID()) == null) {
+			if(getSpace(space.getSafeNextID()) == null) {
+				return null;
+			}
+			else if(distance == 1)
+				return space.getSafeNextID();
+			else
+				return getSpacesAway(getSpace(space.getSafeNextID()), distance-1);
+		}
+		else if(distance == 1) {
+			return space.getNextID();
+		}
+		else
+			return  getSpacesAway(getSpace(space.getNextID()), distance-1);
+	}
+	
+	public HashMap<UUID, Space> getHashMap() {
+		return hashMap;
+	}
+
 	public void addListener(final Listener listener)
 	{
 		listeners.add(listener);
