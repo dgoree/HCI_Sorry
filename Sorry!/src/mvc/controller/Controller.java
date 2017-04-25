@@ -35,6 +35,7 @@ public class Controller implements ActionListener, MouseListener
 	private UUID currentPlayerTokenIDs[];
 	private ArrayList<UUID> currentPlayerMoves;
 	private Token selectedToken;
+	private ArrayList<UUID> selectedTokenMoves = new ArrayList<UUID>();
 	private ArrayList<UUID> magentaSpaces = new ArrayList<UUID>();
 	
 	public Controller(final GameSystem gameSystem)
@@ -170,7 +171,15 @@ public class Controller implements ActionListener, MouseListener
 			
 		//If player clicked a space occupied by own token
 		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
-		{				
+		{
+			//reset magenta spaces to white if necessary
+			//FIXME: need to distinguish between regular spaces and safety zones
+			//FIXME: also, resetting the color covers up slides.
+			for(UUID id: magentaSpaces) {
+				gameSystem.getSpace(id).setBackground(Color.WHITE);
+			}
+			magentaSpaces.clear();
+			
 			//Get corresponding token
 			for(Token token : currentPlayerTokens)
 			{
@@ -182,7 +191,7 @@ public class Controller implements ActionListener, MouseListener
 			
 			//Show token's possible moves
 			//FIXME: Set color of spaces back to white
-			ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
+			selectedTokenMoves = selectedToken.getMoves();
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
@@ -191,8 +200,8 @@ public class Controller implements ActionListener, MouseListener
 		}
 		else
 		{			
-			//Check if user clicked a legal destination space
-			if (currentPlayerMoves.contains(spaceClicked.getId()))
+			//Check if user clicked a legal destination space for the selected token
+			if (!selectedTokenMoves.isEmpty() && selectedTokenMoves.contains(spaceClicked.getId()))
 			{				
 				//Save current location of token
 				UUID tokenPrevLocation = selectedToken.getSpaceID();
@@ -212,6 +221,8 @@ public class Controller implements ActionListener, MouseListener
 				for(UUID id: magentaSpaces) {
 					gameSystem.getSpace(id).setBackground(Color.WHITE);
 				}
+				magentaSpaces.clear();
+				selectedTokenMoves.clear();
 				
 				//Advance turn
 				advanceTurn();	
