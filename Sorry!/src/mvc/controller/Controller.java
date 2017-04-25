@@ -4,6 +4,9 @@ import mvc.view.*;
 import spaces.Space;
 
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,7 +17,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import agents.Player;
 import gameItems.Token;
@@ -103,6 +110,7 @@ public class Controller implements ActionListener, MouseListener
 			if(!gameSystem.isGameInProgress())
 			{
 				//Start new game
+				gameSystem.setChangeNameMenu();
 				gameSystem.newGame();
 				System.out.println("start a new game"); //debug print. TODO: remove
 				
@@ -121,6 +129,7 @@ public class Controller implements ActionListener, MouseListener
 			else
 			{
 				//TODO confirm they want to restart the game.
+				gameSystem.setChangeNameMenu();
 				gameSystem.newGame(); 
 			}
 
@@ -131,7 +140,17 @@ public class Controller implements ActionListener, MouseListener
 			System.out.println("game ended"); //debug print. TODO: remove
 			System.exit(0);
 		}
-		
+		else if(e.getActionCommand().equals(GameFrame.HELP_COMMAND))
+		{
+			String rules = "I'll come back and add in the actual "
+					+ "rules... maybe a scroll bar if they're long enough... fun things like that.";
+			
+			JTextArea text = new JTextArea(rules);
+			text.setLineWrap(true);
+			text.setWrapStyleWord(true);
+			JScrollPane pane = new JScrollPane(text);
+			JOptionPane.showMessageDialog(null, "<html><p style='width:200px;'>" + rules + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 
 	/**

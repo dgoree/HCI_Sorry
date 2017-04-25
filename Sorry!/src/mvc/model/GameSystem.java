@@ -28,6 +28,7 @@ public class GameSystem {
 	private boolean showCard;
 	private boolean gameInProgress;
 	private boolean noPossibleMoves = false;
+	private boolean changeNameMenu = false;
 	private List<Listener> listeners = new ArrayList<Listener>();
 		
 	public GameSystem() {
@@ -419,6 +420,38 @@ public class GameSystem {
 	{
 		this.noPossibleMoves = noPossibleMoves;
 		notifyListeners();
+	}
+	
+	//Maria
+	public String getPlayerName()
+	{
+		return playerNames[turn];
+	}
+	
+	//Maria
+	public String getPlayerName(int playerNum)
+	{
+		return playerNames[playerNum];
+	}
+	
+	//Maria
+	public void setPlayerNames(String name, int playerNum)
+	{
+		playerNames[playerNum] = name;
+	}
+	
+	//Maria
+	public void setChangeNameMenu()
+	{
+		changeNameMenu = true;
+	}
+	
+	//Maria
+	public boolean getChangeNameMenu()
+	{
+		boolean answer = changeNameMenu;
+		changeNameMenu = false;
+		return answer;
 	}
 
 	public void addListener(final Listener listener)
