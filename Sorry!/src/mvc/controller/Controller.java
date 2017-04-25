@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +35,7 @@ public class Controller implements ActionListener, MouseListener
 	private UUID currentPlayerTokenIDs[];
 	private ArrayList<UUID> currentPlayerMoves;
 	private Token selectedToken;
+	private ArrayList<UUID> magentaSpaces = new ArrayList<UUID>();
 	
 	public Controller(final GameSystem gameSystem)
 	{
@@ -140,6 +140,7 @@ public class Controller implements ActionListener, MouseListener
 			System.out.println("game ended"); //debug print. TODO: remove
 			System.exit(0);
 		}
+
 		else if(e.getActionCommand().equals(GameFrame.HELP_COMMAND))
 		{
 			String rules = "I'll come back and add in the actual "
@@ -185,6 +186,7 @@ public class Controller implements ActionListener, MouseListener
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
+				magentaSpaces.add(gameSystem.getSpace(move).getId());
 			}
 		}
 		else
@@ -199,8 +201,17 @@ public class Controller implements ActionListener, MouseListener
 				gameSystem.moveToken(selectedToken, spaceClicked.getId());
 				
 				//Remove icon from token's previous location
-				//FIXME: Removes icon from start if other pieces still in start
-				gameSystem.getSpace(tokenPrevLocation).setIcon(null);
+				//Unless that location is start and there are still other tokens there
+				if(!Arrays.asList(gameSystem.getStartIDs()).contains(tokenPrevLocation) || currentPlayer.numTokensInStart() == 0) {
+					gameSystem.getSpace(tokenPrevLocation).setIcon(null);
+				}
+				
+				//reset magenta spaces to white
+				//FIXME: need to distinguish between regular spaces and safety zones
+				//FIXME: also, resetting the color covers up slides.
+				for(UUID id: magentaSpaces) {
+					gameSystem.getSpace(id).setBackground(Color.WHITE);
+				}
 				
 				//Advance turn
 				advanceTurn();	

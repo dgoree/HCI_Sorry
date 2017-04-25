@@ -192,6 +192,16 @@ public class Player {
 		return tokenIDs;
 	}
 	
+	public int numTokensInStart() {
+		int numTokens = 0;
+		for(Token t: tokens) {
+			if((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.START)) {
+				numTokens++;	
+			}
+		}
+		return numTokens;
+	}
+	
 	public String getName() {
 		return name;
 	}
