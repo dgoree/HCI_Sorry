@@ -56,14 +56,13 @@ public class CardHolder extends JLabel implements Listener
 		
 		drawCard = new JButton("Click to draw" + "\n" +"a card");
 		drawCard.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
-		drawCard.setText("<html><center>" + "Click to draw a card"+"</center></html>");
+		drawCard.setText("<html><center>" +"Select New Game :)"+"</center></html>");
 		drawCard.setBackground(new Color(153, 214, 255));
 		drawCard.setOpaque(true);
 		drawCard.setBorderPainted(false);
 		drawCard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		drawCard.setActionCommand(DRAW_CARD_COMMAND);
 		drawCard.addActionListener(controller);
-		
 		this.add(drawCard);
 	}
 	
@@ -73,6 +72,8 @@ public class CardHolder extends JLabel implements Listener
 		if(!gameSystem.getShowCard())
 		{
 			this.removeAll();
+			drawCard.setText("<html><center>" + gameSystem.getPlayerName() + ", click to draw a card"+"</center></html>");
+			drawCard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			this.add(drawCard);
 		}
 		
