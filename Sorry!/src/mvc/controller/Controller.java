@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -181,10 +182,13 @@ public class Controller implements ActionListener, MouseListener
 			
 			//Show token's possible moves
 			//FIXME: Set color of spaces back to white
+			
+			
 			ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
+
 			}
 		}
 		else
