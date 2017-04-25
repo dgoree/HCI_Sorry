@@ -2,6 +2,7 @@ package mvc.controller;
 
 import mvc.view.*;
 import spaces.Space;
+import spaces.TerminalSpace;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -170,8 +171,8 @@ public class Controller implements ActionListener, MouseListener
 		//Convert array to list
 		List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
 			
-		//If player clicked a space occupied by own token
-		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
+		//If player clicked a space occupied by own token (except home)
+		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()) && !spaceClicked.isHome())
 		{
 			//reset magenta spaces to white if necessary
 			//FIXME: need to distinguish between regular spaces and safety zones
@@ -226,8 +227,11 @@ public class Controller implements ActionListener, MouseListener
 				magentaSpaces.clear();
 				selectedTokenMoves.clear();
 				
-				//Advance turn
-				advanceTurn();	
+				//End game or advance turn
+				if(!gameSystem.isGameInProgress()) {
+					JOptionPane.showMessageDialog(null, gameSystem.getPlayerName()+" won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
+				}
+				else advanceTurn();	
 			}	
 		}
 	}

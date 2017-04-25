@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
 import utilities.Color;
+import utilities.TerminalType;
 
 
 public class Space extends JLabel
@@ -141,6 +142,10 @@ public class Space extends JLabel
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	
+	public boolean isHome() {
+		return (this instanceof TerminalSpace && ((TerminalSpace)this).getType() == TerminalType.HOME);
 	}
 
 	public void setBackground(utilities.Color color) {

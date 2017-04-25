@@ -214,8 +214,8 @@ public class GameSystem {
 		return false;
 	}
 	
-	//move a token and return true if game is over
-	public boolean moveToken(Token token, UUID destination) {
+	//move a token
+	public void moveToken(Token token, UUID destination) {
 		//remove any players occupying destination space
 		evict(destination);
 		//perform slide if necessary
@@ -229,14 +229,9 @@ public class GameSystem {
 		//move token to end of slide
 		token.setSpaceID(destination);
 		
-		//end game, or go to next turn
-		if(checkGameOver()) {
-			System.out.println("Player " + turn + " wins!"); //FIXME: temp; should be done via UI. Listen to gameInProgress variable?
-			return true;
-		}
-		
+		//check if game is over, and update board
+		checkGameOver();
 		notifyListeners();
-		return false;
 	}
 	
 	//remove any tokens occupying the space with this id.
@@ -324,15 +319,14 @@ public class GameSystem {
 	}
 	
 	//the game is over if all of this player's tokens are in home
-	public boolean checkGameOver() {
-		boolean gameOver = true;
+	public void checkGameOver() {
 		Token t;
 		int debug_s = 0; //number of tokens in start
 		int debug_h = 0; //number of tokens in home
 		for(int token=0;token<4;token++) {
 			t = players.get(turn).getTokens()[token]; 
 			if(!inHome(t)) {
-				gameOver = false;
+				return;
 			}
 			else debug_h++;
 			
@@ -342,7 +336,7 @@ public class GameSystem {
 		//if(debug_s < 2)
 		//System.out.println("P" + turn + " Start: " + debug_s);
 		//if(debug_h > 0) System.out.println("P" + turn + " Home: " + debug_h);
-		return gameOver;
+		gameInProgress = false;
 	}
 	
 	public boolean inHome(Token t) {

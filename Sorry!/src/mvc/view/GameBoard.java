@@ -509,6 +509,6 @@ public class GameBoard extends JPanel implements Listener
 	@Override
 	public void updated() 
 	{
-		displayTokens();	
+		displayTokens();
 	}
 }
