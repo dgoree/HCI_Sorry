@@ -91,13 +91,13 @@ public class GameFrame extends JFrame implements Listener
 			JPanel panel = new JPanel(new GridLayout(0, 1));
 			panel.add(new JLabel("Change Player Names?"));
 			
-			panel.add(new JLabel("Player 1:"));
+			panel.add(new JLabel("Red Player:"));
 			panel.add(name1);
-			panel.add(new JLabel("Player 2:"));
+			panel.add(new JLabel("Blue Player:"));
 			panel.add(name2);
-			panel.add(new JLabel("Player 3:"));
+			panel.add(new JLabel("Yellow Player:"));
 			panel.add(name3);
-			panel.add(new JLabel("Player 4:"));
+			panel.add(new JLabel("Green Player:"));
 			panel.add(name4);
 			
 			JOptionPane pane = new JOptionPane();
