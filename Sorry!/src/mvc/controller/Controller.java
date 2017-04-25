@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -37,6 +36,8 @@ public class Controller implements ActionListener, MouseListener
 	private UUID currentPlayerTokenIDs[];
 	private ArrayList<UUID> currentPlayerMoves;
 	private Token selectedToken;
+	private ArrayList<UUID> selectedTokenMoves = new ArrayList<UUID>();
+	private ArrayList<UUID> magentaSpaces = new ArrayList<UUID>();
 	
 	public Controller(final GameSystem gameSystem)
 	{
@@ -141,6 +142,7 @@ public class Controller implements ActionListener, MouseListener
 			System.out.println("game ended"); //debug print. TODO: remove
 			System.exit(0);
 		}
+
 		else if(e.getActionCommand().equals(GameFrame.HELP_COMMAND))
 		{
 			String rules = "I'll come back and add in the actual "
@@ -170,7 +172,15 @@ public class Controller implements ActionListener, MouseListener
 			
 		//If player clicked a space occupied by own token
 		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()))
-		{				
+		{
+			//reset magenta spaces to white if necessary
+			//FIXME: need to distinguish between regular spaces and safety zones
+			//FIXME: also, resetting the color covers up slides.
+			for(UUID id: magentaSpaces) {
+				gameSystem.getSpace(id).setBackground(Color.WHITE);
+			}
+			magentaSpaces.clear();
+			
 			//Get corresponding token
 			for(Token token : currentPlayerTokens)
 			{
@@ -182,19 +192,18 @@ public class Controller implements ActionListener, MouseListener
 			
 			//Show token's possible moves
 			//FIXME: Set color of spaces back to white
-			
-			
-			ArrayList<UUID> selectedTokenMoves = selectedToken.getMoves();
+
+			selectedTokenMoves = selectedToken.getMoves();
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
-
+				magentaSpaces.add(gameSystem.getSpace(move).getId());
 			}
 		}
 		else
 		{			
-			//Check if user clicked a legal destination space
-			if (currentPlayerMoves.contains(spaceClicked.getId()))
+			//Check if user clicked a legal destination space for the selected token
+			if (!selectedTokenMoves.isEmpty() && selectedTokenMoves.contains(spaceClicked.getId()))
 			{				
 				//Save current location of token
 				UUID tokenPrevLocation = selectedToken.getSpaceID();
@@ -203,8 +212,19 @@ public class Controller implements ActionListener, MouseListener
 				gameSystem.moveToken(selectedToken, spaceClicked.getId());
 				
 				//Remove icon from token's previous location
-				//FIXME: Removes icon from start if other pieces still in start
-				gameSystem.getSpace(tokenPrevLocation).setIcon(null);
+				//Unless that location is start and there are still other tokens there
+				if(!Arrays.asList(gameSystem.getStartIDs()).contains(tokenPrevLocation) || currentPlayer.numTokensInStart() == 0) {
+					gameSystem.getSpace(tokenPrevLocation).setIcon(null);
+				}
+				
+				//reset magenta spaces to white
+				//FIXME: need to distinguish between regular spaces and safety zones
+				//FIXME: also, resetting the color covers up slides.
+				for(UUID id: magentaSpaces) {
+					gameSystem.getSpace(id).setBackground(Color.WHITE);
+				}
+				magentaSpaces.clear();
+				selectedTokenMoves.clear();
 				
 				//Advance turn
 				advanceTurn();	
