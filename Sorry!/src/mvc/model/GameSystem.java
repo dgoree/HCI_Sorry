@@ -23,6 +23,7 @@ public class GameSystem {
 	private Deck discard;
 	private UUID[] startSpaces = new UUID[4];
 	private UUID[] safeZoneStartSpaces = new UUID[4];
+	private UUID[] homeSpaces = new UUID[4];
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
 	private Card thisCard;
 	private boolean showCard;
@@ -69,6 +70,7 @@ public class GameSystem {
 		TerminalSpace homeRed = new TerminalSpace(currentSafe.getId(), null, Color.RED, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeRed.getId());
 		hashMap.put(homeRed.getId(), homeRed);
+		homeSpaces[0] = homeRed.getId();
 		
 		//blue
 		Space firstSafeBlue = new Space(null, null, Color.BLUE);
@@ -80,6 +82,7 @@ public class GameSystem {
 		TerminalSpace homeBlue = new TerminalSpace(currentSafe.getId(), null, Color.BLUE, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeBlue.getId());
 		hashMap.put(homeBlue.getId(), homeBlue);
+		homeSpaces[1] = homeBlue.getId();
 		
 		//yellow
 		Space firstSafeYellow = new Space(null, null, Color.YELLOW);
@@ -91,6 +94,7 @@ public class GameSystem {
 		TerminalSpace homeYellow = new TerminalSpace(currentSafe.getId(), null, Color.YELLOW, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeYellow.getId());
 		hashMap.put(homeYellow.getId(), homeYellow);
+		homeSpaces[2] = homeYellow.getId();
 		
 		//green
 		Space firstSafeGreen = new Space(null, null, Color.GREEN);
@@ -102,6 +106,7 @@ public class GameSystem {
 		TerminalSpace homeGreen = new TerminalSpace(currentSafe.getId(), null, Color.GREEN, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeGreen.getId());
 		hashMap.put(homeGreen.getId(), homeGreen);
+		homeSpaces[3] = homeGreen.getId();
 		
 		safeZoneStartSpaces[0] = firstSafeRed.getId();
 		safeZoneStartSpaces[1] = firstSafeBlue.getId();
@@ -316,6 +321,10 @@ public class GameSystem {
 	public UUID[] getSafeZoneStartSpaces() {
 		return safeZoneStartSpaces;
 	}
+	
+	public UUID[] getHomeIDs() {
+		return homeSpaces;
+	}
 
 	public int getTurn() {
 		return turn;
@@ -499,7 +508,7 @@ public class GameSystem {
 		for(int player = 0; player<4; player++) {
 			numStart = 0;
 			for(int token=0; token<4; token++) {
-				if(inHome(players.get(player).getTokens()[token])) numStart++;
+				if(inStart(players.get(player).getTokens()[token])) numStart++;
 			}
 			array[player] = numStart;
 		}

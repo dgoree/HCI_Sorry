@@ -29,8 +29,6 @@ public class GameBoard extends JPanel implements Listener
 	private static final int NUM_SPACES_PER_SIDE = 16;
 	private final GameSystem gameSystem;
 	private final Controller controller;
-	private final int[] tokensInStart = new int[4]; //indexed by player
-	private final int[] tokensInHome = new int[4]; //indexed by player
 	
 	/**
 	 * Constructs the game board
@@ -507,10 +505,34 @@ public class GameBoard extends JPanel implements Listener
 		}
 		
 	}
+	
+	// Update text showing numbers of tokens in start and home
+	private void updateTokenCounts() {
+		int[] tokensInStart = gameSystem.getTokensInStart();
+		int[] tokensInHome = gameSystem.getTokensInHome();
+		UUID[] startIDs = gameSystem.getStartIDs();
+		UUID[] homeIDs = gameSystem.getHomeIDs();
+		
+		for(int player=0; player<4; player++) {
+			if(tokensInStart[player] == 0) {
+				gameSystem.getSpace(startIDs[player]).setText("");
+			}
+			else {
+				gameSystem.getSpace(startIDs[player]).setText("x"+tokensInStart[player]);
+			}
+			if(tokensInHome[player] == 0) {
+				gameSystem.getSpace(homeIDs[player]).setText("");
+			}
+			else {
+				gameSystem.getSpace(homeIDs[player]).setText("x"+tokensInHome[player]);
+			}
+		}
+	}
 
 	@Override
 	public void updated() 
 	{
 		displayTokens();
+		updateTokenCounts();
 	}
 }
