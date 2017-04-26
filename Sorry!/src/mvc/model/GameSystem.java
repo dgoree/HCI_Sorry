@@ -29,6 +29,8 @@ public class GameSystem {
 	private boolean gameInProgress;
 	private boolean noPossibleMoves = false;
 	private boolean changeNameMenu = false;
+	private boolean secondSevenMove = false;
+	private int sevenMovesRemaining = 0;
 	private List<Listener> listeners = new ArrayList<Listener>();
 		
 	public GameSystem() {
@@ -215,13 +217,32 @@ public class GameSystem {
 	}
 	
 	//move a token to a new space. Return the ID of the final destination (will change if slides happen)
-	public UUID moveToken(Token token, UUID destination) {
+	public void moveToken(Token token, UUID destination) {
 		//handle swaps
 		if(thisCard.getNumber() == 11) {
 			if(hashMap.get(destination).getOccupant(players) != null) {
 				hashMap.get(destination).getOccupant(players).setSpaceID(token.getSpaceID());
 			}
 		}
+		//handle sevens - determine if the player will be moving a second token
+		if(thisCard.getNumber() == 7) {
+			if(secondSevenMove) {
+				secondSevenMove = false;
+			}
+			else {
+				UUID temp = token.getSpaceID();
+				int moveCount = 0;
+				while(temp != destination) {
+					temp = hashMap.get(temp).getNextID();
+					moveCount++;
+				}
+				if(moveCount != 7) {
+					secondSevenMove = true;
+					sevenMovesRemaining = 7 - moveCount;
+				}
+			}
+		}
+		
 		
 		//remove any players occupying destination space
 		evict(destination);
@@ -239,11 +260,11 @@ public class GameSystem {
 		//move token to proper space
 		token.setSpaceID(destination);
 		
-		//check if game is over, and update board
-		checkGameOver();
 		notifyListeners();
-		
-		return destination;
+		if(secondSevenMove) { 
+			players.get(turn).calcMoves(players, sevenMovesRemaining);
+		}
+		else checkGameOver();
 	}
 	
 	//remove any tokens occupying the space with this id.
@@ -371,6 +392,14 @@ public class GameSystem {
 	{
 		this.showCard = showCard;
 		notifyListeners();
+	}
+	
+	public void setSecondSevenMove(boolean ssm) {
+		secondSevenMove = ssm;
+	}
+	
+	public boolean isSecondSevenMove() {
+		return secondSevenMove;
 	}
 	
 	public boolean isGameInProgress()

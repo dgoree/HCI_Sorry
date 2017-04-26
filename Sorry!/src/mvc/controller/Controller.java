@@ -35,7 +35,7 @@ public class Controller implements ActionListener, MouseListener
 	private Player currentPlayer;
 	private Token currentPlayerTokens[];
 	private UUID currentPlayerTokenIDs[];
-	private ArrayList<UUID> currentPlayerMoves;
+	private ArrayList<UUID> currentPlayerMoves = new ArrayList<UUID>();
 	private Token selectedToken;
 	private ArrayList<UUID> selectedTokenMoves = new ArrayList<UUID>();
 	private ArrayList<UUID> magentaSpaces = new ArrayList<UUID>();
@@ -47,7 +47,6 @@ public class Controller implements ActionListener, MouseListener
 	
 	/**
 	 * Advances turn to next player and allows player to draw a card
-	 * FIXME: Buggy! Not correctly reverting deck to draw button. Skipping turns.
 	 */
 	private void advanceTurn()
 	{
@@ -61,7 +60,7 @@ public class Controller implements ActionListener, MouseListener
 		{
 			currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
 		}
-		currentPlayerMoves = new ArrayList<UUID>(); //No moves before card has been drawn
+		currentPlayerMoves.clear(); //No moves before card has been drawn
 	}
 
 	@Override
@@ -117,6 +116,8 @@ public class Controller implements ActionListener, MouseListener
 				gameSystem.newGame();
 				System.out.println("start a new game"); //debug print. TODO: remove
 				
+				//TODO: remove all icons from the board 
+				
 				//Initialize current player to first player
 				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
 				currentPlayerTokens = currentPlayer.getTokens();
@@ -125,7 +126,7 @@ public class Controller implements ActionListener, MouseListener
 				{
 					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
 				}
-				currentPlayerMoves = new ArrayList<UUID>(); //No moves before card has been drawn
+				currentPlayerMoves.clear(); //No moves before card has been drawn
 				
 				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove	
 			}
@@ -229,7 +230,9 @@ public class Controller implements ActionListener, MouseListener
 				if(!gameSystem.isGameInProgress()) {
 					JOptionPane.showMessageDialog(null, gameSystem.getPlayerName()+" won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
 				}
-				else advanceTurn();	
+				else if(!gameSystem.isSecondSevenMove()) {
+					advanceTurn();
+				}
 			}	
 		}
 	}

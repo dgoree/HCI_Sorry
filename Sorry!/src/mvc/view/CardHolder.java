@@ -68,6 +68,11 @@ public class CardHolder extends JLabel implements Listener
 	
 	public void updated()
 	{		
+		//don't update if a player needs to move a second token
+		if(gameSystem.isSecondSevenMove()) {
+			return;
+		}
+		
 		//display the draw card button 
 		if(!gameSystem.getShowCard())
 		{
