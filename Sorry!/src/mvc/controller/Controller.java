@@ -192,12 +192,10 @@ public class Controller implements ActionListener, MouseListener
 			}
 			
 			//Show token's possible moves
-			//FIXME: Set color of spaces back to white
-
 			selectedTokenMoves = selectedToken.getMoves();
 			for(UUID move : selectedTokenMoves)
 			{
-				gameSystem.getSpace(move).setBackground(Color.MAGENTA); //FIXME: choose color
+				gameSystem.getSpace(move).setBackground(Color.MAGENTA);
 				magentaSpaces.add(gameSystem.getSpace(move).getId());
 			}
 		}
