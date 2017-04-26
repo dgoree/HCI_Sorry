@@ -216,9 +216,16 @@ public class GameSystem {
 	
 	//move a token
 	public void moveToken(Token token, UUID destination) {
+		//handle swaps
+		if(thisCard.getNumber() == 11) {
+			if(hashMap.get(destination).getOccupant(players) != null) {
+				hashMap.get(destination).getOccupant(players).setSpaceID(token.getSpaceID());
+			}
+		}
+		
 		//remove any players occupying destination space
 		evict(destination);
-		//perform slide if necessary
+		//perform slide if necessary, changing destination
 		UUID slideToID = hashMap.get(destination).getSlideToID(); 
 		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
 			while(destination != slideToID) {
@@ -226,7 +233,7 @@ public class GameSystem {
 				evict(destination);
 			}
 		}
-		//move token to end of slide
+		//move token to proper space
 		token.setSpaceID(destination);
 		
 		//check if game is over, and update board
