@@ -29,6 +29,8 @@ public class GameBoard extends JPanel implements Listener
 	private static final int NUM_SPACES_PER_SIDE = 16;
 	private final GameSystem gameSystem;
 	private final Controller controller;
+	private final int[] tokensInStart = new int[4]; //indexed by player
+	private final int[] tokensInHome = new int[4]; //indexed by player
 	
 	/**
 	 * Constructs the game board

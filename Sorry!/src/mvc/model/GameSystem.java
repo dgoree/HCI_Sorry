@@ -376,6 +376,10 @@ public class GameSystem {
 		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME));		
 	}
 	
+	public boolean inStart(Token t) {
+		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.START));		
+	}
+	
 	public int getCardNum()
 	{
 		return thisCard.getNumber();
@@ -487,6 +491,32 @@ public class GameSystem {
 		boolean answer = changeNameMenu;
 		changeNameMenu = false;
 		return answer;
+	}
+	
+	public int[] getTokensInStart() {
+		int[] array = new int[4];
+		int numStart = 0;
+		for(int player = 0; player<4; player++) {
+			numStart = 0;
+			for(int token=0; token<4; token++) {
+				if(inHome(players.get(player).getTokens()[token])) numStart++;
+			}
+			array[player] = numStart;
+		}
+		return array;
+	}
+	
+	public int[] getTokensInHome() {
+		int[] array = new int[4];
+		int numHome = 0;
+		for(int player = 0; player<4; player++) {
+			numHome = 0;
+			for(int token=0; token<4; token++) {
+				if(inHome(players.get(player).getTokens()[token])) numHome++;
+			}
+			array[player] = numHome;
+		}
+		return array;
 	}
 
 	public void addListener(final Listener listener)
