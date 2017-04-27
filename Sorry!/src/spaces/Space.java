@@ -20,6 +20,7 @@ public class Space extends JLabel
 	protected UUID safeNextID;
 	protected UUID startPreviousID;
 	protected Color color;
+	protected Color defaultColor;
 	protected boolean isSafe;
 	protected UUID id;
 		
@@ -52,6 +53,7 @@ public class Space extends JLabel
 		this.safeNextID = safeNext;
 		this.startPreviousID = null;
 		this.color = color;
+		this.defaultColor = color;
 		this.isSafe = true;
 		this.id = UUID.randomUUID();
 		
@@ -129,6 +131,10 @@ public class Space extends JLabel
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+	
+	public Color getDefaultColor() {
+		return defaultColor;
 	}
 
 	public boolean isSafe() {

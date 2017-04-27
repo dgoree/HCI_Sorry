@@ -64,12 +64,12 @@ public class GameBoard extends JPanel implements Listener
 		
 		//Green
 		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
-		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)
+		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)    TODO: reverse order
 		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
 		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
-		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)
+		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)	TODO: reverse order
 		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
