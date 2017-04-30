@@ -2,10 +2,7 @@ package gameItems;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import spaces.Space;
-import spaces.TerminalSpace;
 import utilities.Color;
-import utilities.TerminalType;
 
 
 public class Token {

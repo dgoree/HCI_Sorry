@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import agents.Player;
@@ -21,7 +20,6 @@ import mvc.model.Listener;
 import spaces.Space;
 import spaces.TerminalSpace;
 import utilities.Color;
-import utilities.TerminalType;
 
 public class GameBoard extends JPanel implements Listener
 {	
@@ -500,10 +498,8 @@ public class GameBoard extends JPanel implements Listener
 				space.setIcon(icon);
 				space.setHorizontalAlignment(JLabel.CENTER);
 				space.setVerticalAlignment(JLabel.CENTER);
-			}
-			
-		}
-		
+			}	
+		}	
 	}
 
 	@Override

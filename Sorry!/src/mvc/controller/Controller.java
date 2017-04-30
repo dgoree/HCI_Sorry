@@ -44,7 +44,6 @@ public class Controller implements ActionListener, MouseListener
 	
 	/**
 	 * Advances turn to next player and allows player to draw a card
-	 * FIXME: Buggy! Not correctly reverting deck to draw button. Skipping turns.
 	 */
 	private void advanceTurn()
 	{
@@ -92,6 +91,8 @@ public class Controller implements ActionListener, MouseListener
 					//Alert player
 					System.out.println("No possible moves."); //debug print TODO: remove
 					gameSystem.setNoPossibleMoves(true);
+					
+					//FIXME: Does this need to be in the View? Or is it ok in the Controller?
 					JOptionPane.showMessageDialog(null, "You have no possible moves.", "Forfeit Your Turn", JOptionPane.PLAIN_MESSAGE);
 					
 					//Advance turn
