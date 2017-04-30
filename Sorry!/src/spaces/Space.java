@@ -1,11 +1,15 @@
 package spaces;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
+import agents.Player;
+import gameItems.Token;
 import utilities.Color;
+import utilities.TerminalType;
 
 
 public class Space extends JLabel
@@ -16,6 +20,7 @@ public class Space extends JLabel
 	protected UUID safeNextID;
 	protected UUID startPreviousID;
 	protected Color color;
+	protected Color defaultColor;
 	protected boolean isSafe;
 	protected UUID id;
 		
@@ -48,6 +53,7 @@ public class Space extends JLabel
 		this.safeNextID = safeNext;
 		this.startPreviousID = null;
 		this.color = color;
+		this.defaultColor = color;
 		this.isSafe = true;
 		this.id = UUID.randomUUID();
 		
@@ -126,6 +132,10 @@ public class Space extends JLabel
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	
+	public Color getDefaultColor() {
+		return defaultColor;
+	}
 
 	public boolean isSafe() {
 		return isSafe;
@@ -141,6 +151,24 @@ public class Space extends JLabel
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	
+	public boolean isHome() {
+		return (this instanceof TerminalSpace && ((TerminalSpace)this).getType() == TerminalType.HOME);
+	}
+	
+	//return the token occupying this space, if there is one
+	public Token getOccupant(ArrayList<Player> players) {
+		Token occupant;
+		for(int player=0; player<4; player++) {
+			for(int tok=0; tok<4; tok++) {
+				occupant = players.get(player).getTokens()[tok];
+				if(occupant.getSpaceID() == id) {
+					return occupant; 
+				}
+			}
+		}
+		return null;
 	}
 
 	public void setBackground(utilities.Color color) {

@@ -144,8 +144,8 @@ public class Player {
 	public void findSplitMoves() {
 		ArrayList<UUID> t1_moves;
 		ArrayList<UUID> t2_moves;
-		for(int token1=0; token1<3; token1++) {
-			for(int token2=token1+1; token2<3; token2++) {
+		for(int token1=0; token1<=3; token1++) {
+			for(int token2=token1+1; token2<=3; token2++) {
 				for(int n=1; n<=6; n++) {
 					//If token1 can move n spaces and token2 can move 7-n spaces, these moves are valid.
 					t1_moves = findSimpleMoves(tokens[token1],n,true);
@@ -190,6 +190,16 @@ public class Player {
 			}
 		}
 		return tokenIDs;
+	}
+	
+	public int numTokensInStart() {
+		int numTokens = 0;
+		for(Token t: tokens) {
+			if((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.START)) {
+				numTokens++;	
+			}
+		}
+		return numTokens;
 	}
 	
 	public String getName() {

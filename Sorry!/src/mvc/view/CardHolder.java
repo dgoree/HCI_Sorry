@@ -68,12 +68,35 @@ public class CardHolder extends JLabel implements Listener
 	
 	public void updated()
 	{		
+		//don't update if a player needs to move a second token
+		if(gameSystem.isSecondSevenMove()) {
+			return;
+		}
+		
 		//display the draw card button 
 		if(!gameSystem.getShowCard())
 		{
 			this.removeAll();
 			drawCard.setText("<html><center>" + gameSystem.getPlayerName() + ", click to draw a card"+"</center></html>");
 			drawCard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			int turn = gameSystem.getTurn();
+			if(turn == 0)
+			{
+				drawCard.setBackground(Color.RED);
+			}
+			else if(turn == 1)
+			{
+				drawCard.setBackground(new Color(153, 214, 255));
+			}
+			else if(turn == 2)
+			{
+				drawCard.setBackground(Color.YELLOW);
+			}
+			else if(turn == 3)
+			{
+				drawCard.setBackground(Color.GREEN);
+			}
+			setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
 			this.add(drawCard);
 		}
 		
@@ -96,6 +119,24 @@ public class CardHolder extends JLabel implements Listener
 			Image scaledImage = image.getImage().getScaledInstance(160, 240, Image.SCALE_SMOOTH); //FIXME: constants?
 			image = new ImageIcon(scaledImage);
 			this.setIcon(image);
+			
+			int turn = gameSystem.getTurn();
+			if(turn == 0)
+			{
+				setBorder(new LineBorder(Color.RED, BORDER_WEIGHT));
+			}
+			else if(turn == 1)
+			{
+				setBorder(new LineBorder(Color.BLUE, BORDER_WEIGHT));
+			}
+			else if(turn == 2)
+			{
+				setBorder(new LineBorder(Color.YELLOW, BORDER_WEIGHT));
+			}
+			else if(turn == 3)
+			{
+				setBorder(new LineBorder(Color.GREEN, BORDER_WEIGHT));
+			}
 		}
 		
 	}

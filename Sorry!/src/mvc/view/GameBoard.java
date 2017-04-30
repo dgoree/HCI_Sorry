@@ -62,12 +62,12 @@ public class GameBoard extends JPanel implements Listener
 		
 		//Green
 		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
-		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)
+		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)    TODO: reverse order
 		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
 		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
-		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)
+		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)	TODO: reverse order
 		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
@@ -501,10 +501,34 @@ public class GameBoard extends JPanel implements Listener
 			}	
 		}	
 	}
+	
+	// Update text showing numbers of tokens in start and home
+	private void updateTokenCounts() {
+		int[] tokensInStart = gameSystem.getTokensInStart();
+		int[] tokensInHome = gameSystem.getTokensInHome();
+		UUID[] startIDs = gameSystem.getStartIDs();
+		UUID[] homeIDs = gameSystem.getHomeIDs();
+		
+		for(int player=0; player<4; player++) {
+			if(tokensInStart[player] == 0) {
+				gameSystem.getSpace(startIDs[player]).setText("");
+			}
+			else {
+				gameSystem.getSpace(startIDs[player]).setText("x"+tokensInStart[player]);
+			}
+			if(tokensInHome[player] == 0) {
+				gameSystem.getSpace(homeIDs[player]).setText("");
+			}
+			else {
+				gameSystem.getSpace(homeIDs[player]).setText("x"+tokensInHome[player]);
+			}
+		}
+	}
 
 	@Override
 	public void updated() 
 	{
-		displayTokens();	
+		displayTokens();
+		updateTokenCounts();
 	}
 }

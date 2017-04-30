@@ -23,12 +23,15 @@ public class GameSystem {
 	private Deck discard;
 	private UUID[] startSpaces = new UUID[4];
 	private UUID[] safeZoneStartSpaces = new UUID[4];
+	private UUID[] homeSpaces = new UUID[4];
 	private HashMap<UUID, Space> hashMap = new HashMap<UUID, Space>();
 	private Card thisCard;
 	private boolean showCard;
 	private boolean gameInProgress;
 	private boolean noPossibleMoves = false;
 	private boolean changeNameMenu = false;
+	private boolean secondSevenMove = false;
+	private int sevenMovesRemaining = 0;
 	private List<Listener> listeners = new ArrayList<Listener>();
 		
 	public GameSystem() {
@@ -67,6 +70,7 @@ public class GameSystem {
 		TerminalSpace homeRed = new TerminalSpace(currentSafe.getId(), null, Color.RED, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeRed.getId());
 		hashMap.put(homeRed.getId(), homeRed);
+		homeSpaces[0] = homeRed.getId();
 		
 		//blue
 		Space firstSafeBlue = new Space(null, null, Color.BLUE);
@@ -78,6 +82,7 @@ public class GameSystem {
 		TerminalSpace homeBlue = new TerminalSpace(currentSafe.getId(), null, Color.BLUE, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeBlue.getId());
 		hashMap.put(homeBlue.getId(), homeBlue);
+		homeSpaces[1] = homeBlue.getId();
 		
 		//yellow
 		Space firstSafeYellow = new Space(null, null, Color.YELLOW);
@@ -89,6 +94,7 @@ public class GameSystem {
 		TerminalSpace homeYellow = new TerminalSpace(currentSafe.getId(), null, Color.YELLOW, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeYellow.getId());
 		hashMap.put(homeYellow.getId(), homeYellow);
+		homeSpaces[2] = homeYellow.getId();
 		
 		//green
 		Space firstSafeGreen = new Space(null, null, Color.GREEN);
@@ -100,6 +106,7 @@ public class GameSystem {
 		TerminalSpace homeGreen = new TerminalSpace(currentSafe.getId(), null, Color.GREEN, TerminalType.HOME);
 		currentSafe.setSafeNextID(homeGreen.getId());
 		hashMap.put(homeGreen.getId(), homeGreen);
+		homeSpaces[3] = homeGreen.getId();
 		
 		safeZoneStartSpaces[0] = firstSafeRed.getId();
 		safeZoneStartSpaces[1] = firstSafeBlue.getId();
@@ -214,29 +221,55 @@ public class GameSystem {
 		return false;
 	}
 	
-	//move a token and return true if game is over
-	public boolean moveToken(Token token, UUID destination) {
+	//move a token to a new space. Return the ID of the final destination (will change if slides happen)
+	public void moveToken(Token token, UUID destination) {
+		//handle swaps
+		if(thisCard.getNumber() == 11) {
+			if(hashMap.get(destination).getOccupant(players) != null) {
+				hashMap.get(destination).getOccupant(players).setSpaceID(token.getSpaceID());
+			}
+		}
+		//handle sevens - determine if the player will be moving a second token
+		if(thisCard.getNumber() == 7) {
+			if(secondSevenMove) {
+				secondSevenMove = false;
+			}
+			else {
+				UUID temp = token.getSpaceID();
+				int moveCount = 0;
+				while(temp != destination) {
+					temp = hashMap.get(temp).getNextID();
+					moveCount++;
+				}
+				if(moveCount != 7) {
+					secondSevenMove = true;
+					sevenMovesRemaining = 7 - moveCount;
+				}
+			}
+		}
+		
+		
 		//remove any players occupying destination space
 		evict(destination);
-		//perform slide if necessary
+		hashMap.get(destination).setIcon(null);
+		//perform slide if necessary, changing destination
 		UUID slideToID = hashMap.get(destination).getSlideToID(); 
 		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
 			while(destination != slideToID) {
+				//remove tokens and their icons from the slide
 				destination = hashMap.get(destination).getNextID();
 				evict(destination);
+				hashMap.get(destination).setIcon(null);
 			}
 		}
-		//move token to end of slide
+		//move token to proper space
 		token.setSpaceID(destination);
 		
-		//end game, or go to next turn
-		if(checkGameOver()) {
-			System.out.println("Player " + turn + " wins!"); //FIXME: temp; should be done via UI. Listen to gameInProgress variable?
-			return true;
-		}
-		
 		notifyListeners();
-		return false;
+		if(secondSevenMove) { 
+			players.get(turn).calcMoves(players, sevenMovesRemaining);
+		}
+		else checkGameOver();
 	}
 	
 	//remove any tokens occupying the space with this id.
@@ -288,6 +321,10 @@ public class GameSystem {
 	public UUID[] getSafeZoneStartSpaces() {
 		return safeZoneStartSpaces;
 	}
+	
+	public UUID[] getHomeIDs() {
+		return homeSpaces;
+	}
 
 	public int getTurn() {
 		return turn;
@@ -324,15 +361,14 @@ public class GameSystem {
 	}
 	
 	//the game is over if all of this player's tokens are in home
-	public boolean checkGameOver() {
-		boolean gameOver = true;
+	public void checkGameOver() {
 		Token t;
 		int debug_s = 0; //number of tokens in start
 		int debug_h = 0; //number of tokens in home
 		for(int token=0;token<4;token++) {
 			t = players.get(turn).getTokens()[token]; 
 			if(!inHome(t)) {
-				gameOver = false;
+				return;
 			}
 			else debug_h++;
 			
@@ -342,11 +378,15 @@ public class GameSystem {
 		//if(debug_s < 2)
 		//System.out.println("P" + turn + " Start: " + debug_s);
 		//if(debug_h > 0) System.out.println("P" + turn + " Home: " + debug_h);
-		return gameOver;
+		gameInProgress = false;
 	}
 	
 	public boolean inHome(Token t) {
 		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME));		
+	}
+	
+	public boolean inStart(Token t) {
+		return ((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.START));		
 	}
 	
 	public int getCardNum()
@@ -365,6 +405,14 @@ public class GameSystem {
 	{
 		this.showCard = showCard;
 		notifyListeners();
+	}
+	
+	public void setSecondSevenMove(boolean ssm) {
+		secondSevenMove = ssm;
+	}
+	
+	public boolean isSecondSevenMove() {
+		return secondSevenMove;
 	}
 	
 	public boolean isGameInProgress()
@@ -452,6 +500,32 @@ public class GameSystem {
 		boolean answer = changeNameMenu;
 		changeNameMenu = false;
 		return answer;
+	}
+	
+	public int[] getTokensInStart() {
+		int[] array = new int[4];
+		int numStart = 0;
+		for(int player = 0; player<4; player++) {
+			numStart = 0;
+			for(int token=0; token<4; token++) {
+				if(inStart(players.get(player).getTokens()[token])) numStart++;
+			}
+			array[player] = numStart;
+		}
+		return array;
+	}
+	
+	public int[] getTokensInHome() {
+		int[] array = new int[4];
+		int numHome = 0;
+		for(int player = 0; player<4; player++) {
+			numHome = 0;
+			for(int token=0; token<4; token++) {
+				if(inHome(players.get(player).getTokens()[token])) numHome++;
+			}
+			array[player] = numHome;
+		}
+		return array;
 	}
 
 	public void addListener(final Listener listener)
