@@ -1,11 +1,7 @@
 package mvc;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-
-import mvc.view.GameBoard;
 import mvc.controller.Controller;
 import mvc.model.GameSystem;
 import mvc.view.GameFrame;

@@ -71,11 +71,11 @@ public class Space extends JLabel
 		setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
 
 		//Set border
-		setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+		//setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
 		
 		//Set fill
-		setBackground(java.awt.Color.WHITE);
-		setOpaque(true);
+		//setBackground(java.awt.Color.WHITE);
+		//setOpaque(true);
 	}
 	
 	@Override

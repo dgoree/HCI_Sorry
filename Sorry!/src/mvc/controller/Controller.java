@@ -5,6 +5,8 @@ import spaces.Space;
 import spaces.TerminalSpace;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.TextArea;
@@ -181,7 +183,9 @@ public class Controller implements ActionListener, MouseListener
 			//FIXME: need to distinguish between regular spaces and safety zones
 			//FIXME: also, resetting the color covers up slides.
 			for(UUID id: magentaSpaces) {
-				gameSystem.getSpace(id).setBackground(Color.WHITE);
+				gameSystem.getSpace(id).setBackground((new JLabel()).getBackground());
+				gameSystem.getSpace(id).setOpaque(false);
+				gameSystem.getSpace(id).getParent().setComponentZOrder(gameSystem.getSpace(id), 0);
 			}
 			magentaSpaces.clear();
 			
@@ -199,6 +203,7 @@ public class Controller implements ActionListener, MouseListener
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA);
+				gameSystem.getSpace(move).setOpaque(true);
 				magentaSpaces.add(gameSystem.getSpace(move).getId());
 			}
 		}
@@ -223,7 +228,9 @@ public class Controller implements ActionListener, MouseListener
 				//FIXME: need to distinguish between regular spaces and safety zones
 				//FIXME: also, resetting the color covers up slides.
 				for(UUID id: magentaSpaces) {
-					gameSystem.getSpace(id).setBackground(Color.WHITE);
+					gameSystem.getSpace(id).setBackground((new JLabel()).getBackground());
+					gameSystem.getSpace(id).setOpaque(false);
+					gameSystem.getSpace(id).getParent().setComponentZOrder(gameSystem.getSpace(id), 0);
 				}
 				magentaSpaces.clear();
 				selectedTokenMoves.clear();

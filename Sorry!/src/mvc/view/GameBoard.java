@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import agents.Player;
 import gameItems.Token;
@@ -23,8 +24,10 @@ import utilities.Color;
 
 public class GameBoard extends JPanel implements Listener
 {	
-	//The number of spaces along a side of the square game board
-	private static final int NUM_SPACES_PER_SIDE = 16;
+	private static final int NUM_SPACES_PER_SIDE = 16; 	//The number of spaces along a side of the square game board
+	private final int SIDE_LENGTH = 40;
+	private final java.awt.Color NAVY = new java.awt.Color(0, 0, 128);
+	private final int BORDER_WEIGHT = 2;
 	private final GameSystem gameSystem;
 	private final Controller controller;
 	
@@ -49,29 +52,36 @@ public class GameBoard extends JPanel implements Listener
 	 */
 	private void initialize(final GameSystem gameSystem, final Controller controller) throws IOException 
 	{	
+
 		initializeSlides();
+		initializeLowerLayerSpaces();
 		initializeSpaces(gameSystem.getSpaceIDs());
 		initializeCardHolder(gameSystem, controller);//Maria's addition
 
 		UUID[] startIDs = gameSystem.getStartIDs();
 		UUID[] safeStartIDs = gameSystem.getSafeZoneStartSpaces();
+		
 		//Yellow
 		initializeStart(startIDs, Color.YELLOW, 3, 1); //upper-left corner (3, 1)
+		initializeLowerLevelSafetyZone(java.awt.Color.YELLOW, 2, 1, 2, 5);
 		initializeSafetyZone(safeStartIDs, Color.YELLOW, 2, 1, 2, 5); //(2, 1) to (2, 5)
 		initializeHome(safeStartIDs, Color.YELLOW, 1, 6); //upper-left corner (1, 6)
 		
 		//Green
 		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
+		initializeLowerLevelSafetyZone(java.awt.Color.GREEN, 14, 2, 10, 2);
 		initializeSafetyZone(safeStartIDs, Color.GREEN, 14, 2, 10, 2); //(14, 2) to (10, 2)
 		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
 		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
+		initializeLowerLevelSafetyZone(java.awt.Color.RED, 13, 14, 13, 10);
 		initializeSafetyZone(safeStartIDs, Color.RED, 13, 14, 13, 10); //(13, 14) to (13, 10)
 		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
 		initializeStart(startIDs, Color.BLUE, 1, 10); //upper-left corner (1, 10)
+		initializeLowerLevelSafetyZone(java.awt.Color.BLUE, 1, 13, 5, 13);
 		initializeSafetyZone(safeStartIDs, Color.BLUE, 1, 13, 5, 13); //(1, 13) to (5, 13)
 		initializeHome(safeStartIDs, Color.BLUE, 6, 12); //upper-left corner (6, 12)
 		
@@ -244,7 +254,84 @@ public class GameBoard extends JPanel implements Listener
 	}
 	
 	/**
-	 * Initializes the spaces along the perimeter of the game board
+	 * Initializes the white spaces along the perimeter of the game board
+	 */
+	private void initializeLowerLayerSpaces()
+	{	
+		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
+		{
+			JLabel label = new JLabel();
+			label.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+			label.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+			label.setBackground(java.awt.Color.WHITE);
+			label.setOpaque(true);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = i;
+			c.gridy = 0;
+			
+			add(label, c);
+		}
+		
+		//Right column
+		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
+		{
+			JLabel label = new JLabel();
+			label.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+			label.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+			label.setBackground(java.awt.Color.WHITE);
+			label.setOpaque(true);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = (NUM_SPACES_PER_SIDE - 1);
+			c.gridy = i;
+			
+			add(label, c);
+		}
+		
+		//Bottom row
+		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
+		{
+			JLabel label = new JLabel();
+			label.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+			label.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+			label.setBackground(java.awt.Color.WHITE);
+			label.setOpaque(true);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = i;
+			c.gridy = (NUM_SPACES_PER_SIDE - 1);
+			
+			add(label, c);
+		}
+		
+		//Left column
+		for (int i = (NUM_SPACES_PER_SIDE - 1); i > 0 ; --i)
+		{
+			JLabel label = new JLabel();
+			label.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+			label.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+			label.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+			label.setBackground(java.awt.Color.WHITE);
+			label.setOpaque(true);
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = i;
+			
+			add(label, c);
+		}
+	}
+	
+	/**
+	 * Initializes the transparent spaces connected with backend along the perimeter of the game board
 	 */
 	private void initializeSpaces(UUID[] spaces)
 	{	
@@ -363,14 +450,110 @@ public class GameBoard extends JPanel implements Listener
 		add(start, c);
 	}
 	
+	private void initializeLowerLevelSafetyZone(java.awt.Color color, int x1, int y1, int x2, int y2)
+	{
+		//Vertical safety zone
+		if (x1 == x2)
+		{
+			if (y1 < y2)
+			{
+				//For each safety zone space
+				for (int i = y1; i <= y2; ++i)
+				{	
+					JLabel safeSpace = new JLabel();
+					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+					safeSpace.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+					safeSpace.setBackground(color);
+					safeSpace.setOpaque(true);
+
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = x1;
+					c.gridy = i;
+
+					add(safeSpace, c);
+				}
+			}
+			else
+			{
+				//For each safety zone space
+				for (int i = y1; i >= y2; --i)
+				{	
+					JLabel safeSpace = new JLabel();
+					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+					safeSpace.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+					safeSpace.setBackground(color);
+					safeSpace.setOpaque(true);
+	
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = x1;
+					c.gridy = i;
+					
+					add(safeSpace, c);
+				}
+			}
+		}
+		//Horizontal safety zone
+		else if (y1 == y2)
+		{
+			if (x1 < x2)
+			{
+				//For each safety zone space
+				for (int i = x1; i <= x2; ++i)
+				{				
+					JLabel safeSpace = new JLabel();
+					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+					safeSpace.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+					safeSpace.setBackground(color);
+					safeSpace.setOpaque(true);
+					
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = i;
+					c.gridy = y1;
+
+					add(safeSpace, c);
+				}	
+			}
+			else
+			{
+				//For each safety zone space
+				for (int i = x1; i >= x2; --i)
+				{				
+					JLabel safeSpace = new JLabel();
+					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+					safeSpace.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+					safeSpace.setBorder(new LineBorder(NAVY, BORDER_WEIGHT));
+					safeSpace.setBackground(color);
+					safeSpace.setOpaque(true);
+					
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = i;
+					c.gridy = y1;
+
+					add(safeSpace, c);
+				}	
+			}
+		}
+	}
+	
 	/**
 	 * Initializes the spaces of a safety zone
 	 * 
 	 * @param color The color of the safety zone
-	 * @param x1 The x-coordinate of the first (numerically lowest coordinate) safety zone space
-	 * @param y1 The y-coordinate of the first (numerically lowest coordinate) safety zone space
-	 * @param x2 The x-coordinate of the last (numerically highest coordinate) safety zone space
-	 * @param y2 The y-coordinate of the last (numerically highest coordinate) safety zone space
+	 * @param x1 The x-coordinate of the first safety zone space
+	 * @param y1 The y-coordinate of the first safety zone space
+	 * @param x2 The x-coordinate of the last safety zone space
+	 * @param y2 The y-coordinate of the last safety zone space
 	 */
 	private void initializeSafetyZone(UUID[] safeStartSpaces, Color color, int x1, int y1, int x2, int y2)
 	{
@@ -395,10 +578,6 @@ public class GameBoard extends JPanel implements Listener
 				//For each safety zone space
 				for (int i = y1; i <= y2; ++i)
 				{	
-					//Set color
-					safe.setBackground(color);
-					safe.setOpaque(true);
-
 					//Set location
 					GridBagConstraints c = new GridBagConstraints();
 					c.gridx = x1;
@@ -415,10 +594,6 @@ public class GameBoard extends JPanel implements Listener
 				//For each safety zone space
 				for (int i = y1; i >= y2; --i)
 				{	
-					//Set color
-					safe.setBackground(color);
-					safe.setOpaque(true);
-
 					//Set location
 					GridBagConstraints c = new GridBagConstraints();
 					c.gridx = x1;
@@ -440,11 +615,7 @@ public class GameBoard extends JPanel implements Listener
 			{
 				//For each safety zone space
 				for (int i = x1; i <= x2; ++i)
-				{				
-					//Set color
-					safe.setBackground(color);
-					safe.setOpaque(true);
-					
+				{									
 					//Set location
 					GridBagConstraints c = new GridBagConstraints();
 					c.gridx = i;
@@ -460,11 +631,7 @@ public class GameBoard extends JPanel implements Listener
 			{
 				//For each safety zone space
 				for (int i = x1; i >= x2; --i)
-				{				
-					//Set color
-					safe.setBackground(color);
-					safe.setOpaque(true);
-					
+				{									
 					//Set location
 					GridBagConstraints c = new GridBagConstraints();
 					c.gridx = i;
@@ -527,7 +694,6 @@ public class GameBoard extends JPanel implements Listener
 	
 	/**
 	 * Display each player's four tokens on the game board
-	 * TODO: How to display four tokens in start and home
 	 */
 	private void displayTokens()
 	{
