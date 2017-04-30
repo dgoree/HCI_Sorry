@@ -62,12 +62,12 @@ public class GameBoard extends JPanel implements Listener
 		
 		//Green
 		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
-		initializeSafetyZone(safeStartIDs, Color.GREEN, 10, 2, 14, 2); //(10, 2) to (14, 2)    TODO: reverse order
+		initializeSafetyZone(safeStartIDs, Color.GREEN, 14, 2, 10, 2); //(14, 2) to (10, 2)
 		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
 		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
-		initializeSafetyZone(safeStartIDs, Color.RED, 13, 10, 13, 14); //(13, 10) to (13, 14)	TODO: reverse order
+		initializeSafetyZone(safeStartIDs, Color.RED, 13, 14, 13, 10); //(13, 14) to (13, 10)
 		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
@@ -390,45 +390,93 @@ public class GameBoard extends JPanel implements Listener
 		//Vertical safety zone
 		if (x1 == x2)
 		{
-			//For each safety zone space
-			for (int i = y1; i <= y2; ++i)
-			{	
-				//Set color
-				safe.setBackground(color);
-				safe.setOpaque(true);
+			if (y1 < y2)
+			{
+				//For each safety zone space
+				for (int i = y1; i <= y2; ++i)
+				{	
+					//Set color
+					safe.setBackground(color);
+					safe.setOpaque(true);
 
-				//Set location
-				GridBagConstraints c = new GridBagConstraints();
-				c.gridx = x1;
-				c.gridy = i;
-				
-				safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
-				add(safe, c);
-				if(safe.getSafeNextID() != null)
-					safe = gameSystem.getSpace(safe.getSafeNextID());
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = x1;
+					c.gridy = i;
+					
+					safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
+					add(safe, c);
+					if(safe.getSafeNextID() != null)
+						safe = gameSystem.getSpace(safe.getSafeNextID());
+				}
 			}
+			else
+			{
+				//For each safety zone space
+				for (int i = y1; i >= y2; --i)
+				{	
+					//Set color
+					safe.setBackground(color);
+					safe.setOpaque(true);
+
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = x1;
+					c.gridy = i;
+					
+					safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
+					add(safe, c);
+					if(safe.getSafeNextID() != null)
+						safe = gameSystem.getSpace(safe.getSafeNextID());
+				}
+			}
+
 		}
 		
 		//Horizontal safety zone
 		else if (y1 == y2)
 		{
-			//For each safety zone space
-			for (int i = x1; i <= x2; ++i)
-			{				
-				//Set color
-				safe.setBackground(color);
-				safe.setOpaque(true);
-				
-				//Set location
-				GridBagConstraints c = new GridBagConstraints();
-				c.gridx = i;
-				c.gridy = y1;
-				
-				safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
-				add(safe, c);
-				if(safe.getSafeNextID() != null)
-					safe = gameSystem.getSpace(safe.getSafeNextID());
-			}	
+			if (x1 < x2)
+			{
+				//For each safety zone space
+				for (int i = x1; i <= x2; ++i)
+				{				
+					//Set color
+					safe.setBackground(color);
+					safe.setOpaque(true);
+					
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = i;
+					c.gridy = y1;
+					
+					safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
+					add(safe, c);
+					if(safe.getSafeNextID() != null)
+						safe = gameSystem.getSpace(safe.getSafeNextID());
+				}	
+			}
+			else
+			{
+				//For each safety zone space
+				for (int i = x1; i >= x2; --i)
+				{				
+					//Set color
+					safe.setBackground(color);
+					safe.setOpaque(true);
+					
+					//Set location
+					GridBagConstraints c = new GridBagConstraints();
+					c.gridx = i;
+					c.gridy = y1;
+					
+					safe.addMouseListener(controller); //TODO: Can this be done in the Space class?
+					add(safe, c);
+					if(safe.getSafeNextID() != null)
+						safe = gameSystem.getSpace(safe.getSafeNextID());
+				}	
+			}
+
 		}
 	}
 	
