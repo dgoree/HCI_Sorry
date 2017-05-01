@@ -195,6 +195,7 @@ public class Controller implements ActionListener, MouseListener
 				if (token.getSpaceID() == spaceClicked.getId())
 				{
 					selectedToken = token;
+					break;
 				}
 			}
 			

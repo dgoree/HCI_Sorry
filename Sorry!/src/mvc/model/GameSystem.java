@@ -238,7 +238,14 @@ public class GameSystem {
 				UUID temp = token.getSpaceID();
 				int moveCount = 0;
 				while(temp != destination) {
-					temp = hashMap.get(temp).getNextID();
+					//first try to go to a safeNext
+					if(hashMap.get(temp).getSafeNextID() != null && hashMap.get(hashMap.get(temp).getSafeNextID()).getDefaultColor() == Color.values()[turn]) {
+						temp = hashMap.get(temp).getSafeNextID();
+					}
+					//go to an ordinary next is safeNext is invalid
+					else {
+						temp = hashMap.get(temp).getNextID();
+					}
 					moveCount++;
 				}
 				if(moveCount != 7) {
@@ -363,17 +370,11 @@ public class GameSystem {
 	//the game is over if all of this player's tokens are in home
 	public void checkGameOver() {
 		Token t;
-		int debug_s = 0; //number of tokens in start
-		int debug_h = 0; //number of tokens in home
 		for(int token=0;token<4;token++) {
 			t = players.get(turn).getTokens()[token]; 
 			if(!inHome(t)) {
 				return;
 			}
-			else debug_h++;
-			
-			//debug
-			if(t.getSpaceID() == startSpaces[turn]) debug_s++;
 		}
 		//if(debug_s < 2)
 		//System.out.println("P" + turn + " Start: " + debug_s);
