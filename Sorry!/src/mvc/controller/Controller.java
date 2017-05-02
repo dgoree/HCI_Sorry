@@ -112,6 +112,16 @@ public class Controller implements ActionListener, MouseListener
 		{
 			if(!gameSystem.isGameInProgress())
 			{
+				//Remove all token icons currently on game board
+				for (Player player : gameSystem.getPlayers())
+				{
+					for (Token token : player.getTokens())
+					{
+						gameSystem.getSpace(token.getSpaceID()).setIcon(null);
+						gameSystem.getSpace(token.getSpaceID()).setText(null);
+					}
+				}
+				
 				//Start new game
 				gameSystem.setChangeNameMenu();
 				gameSystem.newGame();
@@ -153,8 +163,6 @@ public class Controller implements ActionListener, MouseListener
 					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
 				}
 				currentPlayerMoves.clear(); //No moves before card has been drawn
-				
-				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");	
 			}
 
 		}
