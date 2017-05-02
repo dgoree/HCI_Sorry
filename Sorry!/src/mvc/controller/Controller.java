@@ -125,8 +125,6 @@ public class Controller implements ActionListener, MouseListener
 					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
 				}
 				currentPlayerMoves.clear(); //No moves before card has been drawn
-				
-				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");
 			}
 			else
 			{
