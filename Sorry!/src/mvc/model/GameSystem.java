@@ -258,7 +258,7 @@ public class GameSystem {
 		
 		//remove any players occupying destination space
 		evict(destination);
-		hashMap.get(destination).setIcon(null);
+		hashMap.get(destination).setIcon(null); 
 		//perform slide if necessary, changing destination
 		UUID slideToID = hashMap.get(destination).getSlideToID(); 
 		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {

@@ -792,7 +792,6 @@ public class GameBoard extends JPanel implements Listener
 			for(Token token : tokens)
 			{
 				Space space = gameSystem.getSpace(token.getSpaceID());
-				
 				ImageIcon icon = new ImageIcon("images/TokenImages/" + color + "_Token.png");
 				space.setIcon(icon);
 				space.setHorizontalAlignment(JLabel.CENTER);
