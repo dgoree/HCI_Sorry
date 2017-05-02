@@ -266,7 +266,7 @@ public class GameSystem {
 				//remove tokens and their icons from the slide
 				destination = hashMap.get(destination).getNextID();
 				evict(destination);
-				hashMap.get(destination).setIcon(null); //Commenting this out solves the hidden token at end of slide issue
+				hashMap.get(destination).setIcon(null);
 			}
 		}
 		//move token to proper space
