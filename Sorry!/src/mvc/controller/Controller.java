@@ -182,7 +182,7 @@ public class Controller implements ActionListener, MouseListener
 			String rules1 ="  To be the first player to get all four of your pawns " +
 					"from your color START to your color HOME";
 			String rules2 = "  The red player moves first.  Movement is clockwise around the "
-					+ "board (unless instructed otherwise!) and the play passes clockwise."
+					+ "board and the play passes clockwise."
 					+ " Only a 1 card or a 2 card can move you out of START.  If it's your"
 					+ " first turn and you do not draw a card that lets you "
 					+ "start a pawn out, you forfeit (skip) your turn.  On all turns you "
