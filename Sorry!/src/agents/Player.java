@@ -1,5 +1,6 @@
 package agents;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,6 +17,8 @@ public class Player {
 	private Token[] tokens;
 	private UUID startSpace;
 	private HashMap<UUID, Space> hashMap;
+	private boolean override_7s = false; //override for findSimpleMoves() when used for 7s
+	private UUID[] predictedTokenIDs;
 	
 	public Player(String name, Color color, Token[] tokens, UUID startSpace, HashMap<UUID, Space> hashMap) {
 		this.name = name;
@@ -25,7 +28,8 @@ public class Player {
 		this.hashMap = hashMap;
 	}
 	
-	public void calcMoves(ArrayList<Player> players, int cardNumber) {
+	//if secondSevenMove is true, this is the second part of a 2-pawn split and only simple forward moves are allowed
+	public void calcMoves(ArrayList<Player> players, int cardNumber, boolean secondSevenMove) {
 		
 		//sevens have to be handled specially
 		if(cardNumber == 7) {
@@ -50,16 +54,16 @@ public class Player {
 			case 1:
 				//move forward 1
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
-				//move from start
-				if(t.getSpaceID() == startSpace) {
+				//move from start unless part of a split move
+				if(!secondSevenMove && t.getSpaceID() == startSpace) {
 					t.addMove(hashMap.get(t.getSpaceID()).getNextID());
 				}
 				break;
 			case 2:
 				//move forward 2
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
-				//move from start
-				if(t.getSpaceID() == startSpace) {
+				//move from start unless part of a split move
+				if(!secondSevenMove && t.getSpaceID() == startSpace) {
 					t.addMove(hashMap.get(t.getSpaceID()).getNextID());
 				}
 				break;
@@ -68,13 +72,21 @@ public class Player {
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
 				break;
 			case 4:
-				//back 4
-				t.setMoves(findSimpleMoves(t,cardNumber,false));
+				//back 4, unless part of a split
+				if(!secondSevenMove) {
+					t.setMoves(findSimpleMoves(t,cardNumber,false));
+				}
+				else {
+					t.setMoves(findSimpleMoves(t,cardNumber,true));
+				}
 				break;
 			case 5:
 				//move 5
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
 				break;
+			case 6:
+				//move 6; only happens as part of a split 7
+				t.setMoves(findSimpleMoves(t,cardNumber,true));
 			case 8:
 				//move 8
 				t.setMoves(findSimpleMoves(t,cardNumber,true));
@@ -129,12 +141,23 @@ public class Player {
 				}
 			}
 		}
-		//determine if end result is a legal destination: must not have reached a null space and either:
-		//the space must not contain another of this player's tokens, or
-		//the space must be the start of a slide of a different color
-		if(count == numMoves &&
+		
+		//create moveOptions
+		
+		//special scenario for sevens
+		if(override_7s) {
+			if(count == numMoves &&
+			   space != null &&
+			   (!Arrays.asList(predictedTokenIDs).contains(space.getId()))) {
+				moveOptions.add(space.getId());
+			}
+		}
+		
+		//determine if end result is a legal destination: must not have reached a null space and
+		//the space must not contain another of this player's tokens
+		else if(count == numMoves &&
 		   space != null &&
-		   (!findMyTokens().contains(space.getId()))) { // || (space.getSlideToID() != null && space.getColor() != color))) {
+		   (!findMyTokens().contains(space.getId()))) {
 			moveOptions.add(space.getId());
 		}
 		return moveOptions;
@@ -145,18 +168,20 @@ public class Player {
 		ArrayList<UUID> t1_moves;
 		ArrayList<UUID> t2_moves;
 		for(int token1=0; token1<=3; token1++) {
-			for(int token2=token1+1; token2<=3; token2++) {
+			for(int token2=0; token2<=3; token2++) {
+				if(token1 == token2) continue;
 				for(int n=1; n<=6; n++) {
 					//If token1 can move n spaces and token2 can move 7-n spaces, these moves are valid.
 					t1_moves = findSimpleMoves(tokens[token1],n,true);
 					if(!t1_moves.isEmpty()) {
+						predictToken(token1, n);
+						override_7s = true;
 						t2_moves = findSimpleMoves(tokens[token2],7-n,true);
+						override_7s = false;
 						if(!t2_moves.isEmpty()) {
 							tokens[token1].addMoves(t1_moves);
-							tokens[token2].addMoves(t2_moves);
 						}
 					}
-					
 				}
 			}
 		}
@@ -165,14 +190,40 @@ public class Player {
 	//get IDs of locations of all this player's tokens, except those in home
 	public ArrayList<UUID> findMyTokens() {
 		ArrayList<UUID> tokenIDs = new ArrayList<UUID>();
-		Token t;
-		for(int token=0;token<4;token++) {
-			t = tokens[token];
+		for(Token t: tokens) {
 			if(!((hashMap.get(t.getSpaceID()) instanceof TerminalSpace) && (((TerminalSpace)hashMap.get(t.getSpaceID())).getType() == TerminalType.HOME))) {
 				tokenIDs.add(t.getSpaceID());
 			}
 		}
 		return tokenIDs;
+	}
+	
+	//update IDs of locations where this player's tokens have been predicted to be, based on 7s calculations
+	public void predictToken(int predictedToken, int numSpaces) {
+		predictedTokenIDs = new UUID[4];
+		int i=0;
+		for(Token t: tokens) {
+			predictedTokenIDs[i++] = t.getSpaceID();
+		}
+		UUID id = predictedTokenIDs[predictedToken];
+		
+		//token can't move if in start or home
+		if(hashMap.get(id) instanceof TerminalSpace) return;
+		
+		//make prediction: move this token the proper number of spaces
+		for(int n=0; n<numSpaces; n++) {
+			//first try to go to a safeNext
+			if(hashMap.get(id).getSafeNextID() != null && hashMap.get(hashMap.get(id).getSafeNextID()).getDefaultColor() == color) {
+				id = hashMap.get(id).getSafeNextID();
+			}
+			//go to an ordinary next is safeNext is invalid
+			else {
+				id = hashMap.get(id).getNextID();
+			}
+		}
+		
+		//update prediction
+		predictedTokenIDs[predictedToken] = id;
 	}
 	
 	public ArrayList<UUID> findOpponentTokens(ArrayList<Player> players) {

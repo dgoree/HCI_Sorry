@@ -207,7 +207,7 @@ public class GameSystem {
 		}
 		
 		//calculate all available move options
-		players.get(turn).calcMoves(players, thisCard.getNumber());
+		players.get(turn).calcMoves(players, thisCard.getNumber(), secondSevenMove);
 		
 		//determine if there are any valid moves
 		ArrayList<UUID> moveOptions;
@@ -274,7 +274,7 @@ public class GameSystem {
 		
 		notifyListeners();
 		if(secondSevenMove) { 
-			players.get(turn).calcMoves(players, sevenMovesRemaining);
+			players.get(turn).calcMoves(players, sevenMovesRemaining, secondSevenMove);
 		}
 		else checkGameOver();
 	}
