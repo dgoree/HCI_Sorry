@@ -45,7 +45,7 @@ public class GameFrame extends JFrame implements Listener
 	 */
 	public GameFrame(final GameSystem gameSystem, final Controller controller) throws IOException
 	{
-		super();
+		super("Sorry!");
 		this.gameSystem = gameSystem;
 		gameSystem.addListener(this);
 		
