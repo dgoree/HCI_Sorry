@@ -261,8 +261,10 @@ public class Controller implements ActionListener, MouseListener
 	public void mouseClicked(MouseEvent e) 
 	{
 		Space spaceClicked = (Space) e.getSource(); //Only added MouseListeners to spaces
-
+		
 		//Convert array to list
+		if(currentPlayerTokenIDs == null)
+			return;
 		List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
 
 		//If player clicked a space occupied by own token (except home)
@@ -296,7 +298,7 @@ public class Controller implements ActionListener, MouseListener
 			}
 		}
 		else
-		{			
+		{	
 			//Check if user clicked a legal destination space for the selected token
 			if (!selectedTokenMoves.isEmpty() && selectedTokenMoves.contains(spaceClicked.getId()))
 			{				
