@@ -30,7 +30,6 @@ public class GameFrame extends JFrame implements Listener
 {
 	public static final String NEW_GAME_COMMAND = "new game";
 	public static final String QUIT_GAME_COMMAND = "quit game";
-	//public static final String HELP_COMMAND = "help";
 	public static final String GENERAL_RULES = "general";
 	public static final String THE_BOARD_COMMAND = "board";
 	public static final String CARD_COMMAND = "cards";
@@ -70,13 +69,11 @@ public class GameFrame extends JFrame implements Listener
 		JMenuBar menuBar = new JMenuBar();
 		JButton newGame = new JButton("New Game");
 		JButton quitGame = new JButton("Quit Game");
-		JToggleButton help = new JToggleButton("Help...");
+		JToggleButton help = new JToggleButton("Rules...");
 		newGame.setActionCommand(NEW_GAME_COMMAND);
 		quitGame.setActionCommand(QUIT_GAME_COMMAND);
-		//help.setActionCommand(HELP_COMMAND);
 		newGame.addActionListener(controller);
 		quitGame.addActionListener(controller);
-		//help.addActionListener(controller);
 		
 		JPopupMenu helpOptions = new JPopupMenu();
 		
