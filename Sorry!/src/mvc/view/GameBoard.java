@@ -52,39 +52,37 @@ public class GameBoard extends JPanel implements Listener
 	 */
 	private void initialize(final GameSystem gameSystem, final Controller controller) throws IOException 
 	{	
-
-		initializeSlides();
-		initializeLowerLayerSpaces();
-		initializeSpaces(gameSystem.getSpaceIDs());
-		initializeCardHolder(gameSystem, controller);//Maria's addition
-
 		UUID[] startIDs = gameSystem.getStartIDs();
 		UUID[] safeStartIDs = gameSystem.getSafeZoneStartSpaces();
 		
 		//Yellow
 		initializeStart(startIDs, Color.YELLOW, 3, 1); //upper-left corner (3, 1)
+		initializeHome(safeStartIDs, Color.YELLOW, 1, 6); //upper-left corner (1, 6)
 		initializeLowerLevelSafetyZone(java.awt.Color.YELLOW, 2, 1, 2, 5);
 		initializeSafetyZone(safeStartIDs, Color.YELLOW, 2, 1, 2, 5); //(2, 1) to (2, 5)
-		initializeHome(safeStartIDs, Color.YELLOW, 1, 6); //upper-left corner (1, 6)
-		
+
 		//Green
 		initializeStart(startIDs, Color.GREEN, 12, 3); //upper-left corner (12, 3)
+		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		initializeLowerLevelSafetyZone(java.awt.Color.GREEN, 14, 2, 10, 2);
 		initializeSafetyZone(safeStartIDs, Color.GREEN, 14, 2, 10, 2); //(14, 2) to (10, 2)
-		initializeHome(safeStartIDs, Color.GREEN, 7, 1); //upper-left corner (7, 1)
 		
 		//Red
 		initializeStart(startIDs, Color.RED, 10, 12); //upper-left corner (10, 12)
+		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		initializeLowerLevelSafetyZone(java.awt.Color.RED, 13, 14, 13, 10);
 		initializeSafetyZone(safeStartIDs, Color.RED, 13, 14, 13, 10); //(13, 14) to (13, 10)
-		initializeHome(safeStartIDs, Color.RED, 12, 7); //upper-left corner (12, 7)
 		
 		//Blue
 		initializeStart(startIDs, Color.BLUE, 1, 10); //upper-left corner (1, 10)
+		initializeHome(safeStartIDs, Color.BLUE, 6, 12); //upper-left corner (6, 12)
 		initializeLowerLevelSafetyZone(java.awt.Color.BLUE, 1, 13, 5, 13);
 		initializeSafetyZone(safeStartIDs, Color.BLUE, 1, 13, 5, 13); //(1, 13) to (5, 13)
-		initializeHome(safeStartIDs, Color.BLUE, 6, 12); //upper-left corner (6, 12)
 		
+		initializeSlides();
+		initializeLowerLayerSpaces();
+		initializeSpaces(gameSystem.getSpaceIDs());
+		initializeCardHolder(gameSystem, controller);//Maria's addition
 	}
 	
 	/**
@@ -258,6 +256,7 @@ public class GameBoard extends JPanel implements Listener
 	 */
 	private void initializeLowerLayerSpaces()
 	{	
+		//Top row
 		for (int i = 0; i < (NUM_SPACES_PER_SIDE - 1); ++i)
 		{
 			JLabel label = new JLabel();
@@ -328,6 +327,59 @@ public class GameBoard extends JPanel implements Listener
 			
 			add(label, c);
 		}
+		
+		//Extra start spaces
+		//Yellow
+		JLabel extraSpace1 = new JLabel();
+		extraSpace1.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace1.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace1.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+		extraSpace1.setBackground(NAVY);
+		extraSpace1.setOpaque(true);
+		
+		GridBagConstraints c1 = new GridBagConstraints();
+		c1.gridx = 4;
+		c1.gridy = 1;
+		add(extraSpace1, c1);
+	
+		//Green
+		JLabel extraSpace2 = new JLabel();
+		extraSpace2.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace2.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace2.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+		extraSpace2.setBackground(NAVY);
+		extraSpace2.setOpaque(true);
+		
+		GridBagConstraints c2 = new GridBagConstraints();
+		c2.gridx = 14;
+		c2.gridy = 4;
+		add(extraSpace2, c2);
+	
+		//Red
+		JLabel extraSpace3 = new JLabel();
+		extraSpace3.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace3.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace3.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+		extraSpace3.setBackground(NAVY);
+		extraSpace3.setOpaque(true);
+		
+		GridBagConstraints c3 = new GridBagConstraints();
+		c3.gridx = 11;
+		c3.gridy = 14;
+		add(extraSpace3, c3);
+		
+		//Blue
+		JLabel extraSpace4 = new JLabel();
+		extraSpace4.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace4.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace4.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+		extraSpace4.setBackground(NAVY);
+		extraSpace4.setOpaque(true);
+		
+		GridBagConstraints c4 = new GridBagConstraints();
+		c4.gridx = 1;
+		c4.gridy = 11;
+		add(extraSpace4, c4);	
 	}
 	
 	/**
@@ -419,6 +471,16 @@ public class GameBoard extends JPanel implements Listener
 	 */
 	private void initializeStart(UUID[] startSpaces, Color color, int gridX, int gridY)
 	{
+		//Set "START" size and location
+		int startLength = Space.SIDE_LENGTH * 3;
+		
+		GridBagConstraints c = new GridBagConstraints();
+		//3x3 space with the area of 9 normal game board spaces
+		c.gridwidth = 3; //FIXME: Use constant?
+		c.gridheight = 3; //FIXME: Use constant?
+		c.gridx = gridX;
+		c.gridy = gridY;
+		
 		UUID id = null;
 		for(int i = 0; i<startSpaces.length; i++) {
 			Space space = gameSystem.getSpace(startSpaces[i]);
@@ -430,35 +492,37 @@ public class GameBoard extends JPanel implements Listener
 		}
 		//TODO error handle id = null. Shouldn't come up though.
 		TerminalSpace start = (TerminalSpace) gameSystem.getSpace(id);
-		
-		//Set "START" size and color
-		int startLength = Space.SIDE_LENGTH * 3; //FIXME: make static?
 		start.setPreferredSize(new Dimension(startLength, startLength));
-		start.setBackground(color);
-		start.setOpaque(true);
-		
-		//Set "START" location
-		//TODO: Padding
-		GridBagConstraints c = new GridBagConstraints();
-		//3x3 space with the area of 9 normal game board spaces
-		c.gridwidth = 3; //FIXME: Use constant?
-		c.gridheight = 3; //FIXME: Use constant?
-		c.gridx = gridX;
-		c.gridy = gridY;
-		
 		start.addMouseListener(controller); //TODO: Can this be done in the Space class?
 		add(start, c);
+		
+		//Set lower layer "START"
+		JLabel startLabel = new JLabel();
+		startLabel.setPreferredSize(new Dimension(startLength, startLength));
+		ImageIcon icon = new ImageIcon("images/TerminalImages/" + color + "_Start.png");
+		startLabel.setIcon(icon);
+		startLabel.setHorizontalAlignment(JLabel.CENTER);
+		startLabel.setVerticalAlignment(JLabel.CENTER);
+		add(startLabel, c);	
 	}
 	
 	private void initializeLowerLevelSafetyZone(java.awt.Color color, int x1, int y1, int x2, int y2)
 	{
+		JLabel extraSpace = new JLabel();
+		extraSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace.setPreferredSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
+		extraSpace.setMaximumSize(new Dimension((3 * SIDE_LENGTH), (3 * SIDE_LENGTH)));
+		extraSpace.setBackground(NAVY);
+		extraSpace.setOpaque(true);
+		
 		//Vertical safety zone
 		if (x1 == x2)
 		{
 			if (y1 < y2)
 			{
+				int i;
 				//For each safety zone space
-				for (int i = y1; i <= y2; ++i)
+				for (i = y1; i <= y2; ++i)
 				{	
 					JLabel safeSpace = new JLabel();
 					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
@@ -475,11 +539,16 @@ public class GameBoard extends JPanel implements Listener
 
 					add(safeSpace, c);
 				}
+				GridBagConstraints c1 = new GridBagConstraints();
+				c1.gridx = x1;
+				c1.gridy = i;
+				add(extraSpace, c1);
 			}
 			else
 			{
+				int i;
 				//For each safety zone space
-				for (int i = y1; i >= y2; --i)
+				for (i = y1; i >= y2; --i)
 				{	
 					JLabel safeSpace = new JLabel();
 					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
@@ -496,6 +565,10 @@ public class GameBoard extends JPanel implements Listener
 					
 					add(safeSpace, c);
 				}
+				GridBagConstraints c1 = new GridBagConstraints();
+				c1.gridx = x1;
+				c1.gridy = i;
+				add(extraSpace, c1);
 			}
 		}
 		//Horizontal safety zone
@@ -503,8 +576,9 @@ public class GameBoard extends JPanel implements Listener
 		{
 			if (x1 < x2)
 			{
+				int i;
 				//For each safety zone space
-				for (int i = x1; i <= x2; ++i)
+				for (i = x1; i <= x2; ++i)
 				{				
 					JLabel safeSpace = new JLabel();
 					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
@@ -520,12 +594,17 @@ public class GameBoard extends JPanel implements Listener
 					c.gridy = y1;
 
 					add(safeSpace, c);
-				}	
+				}
+				GridBagConstraints c1 = new GridBagConstraints();
+				c1.gridx = i;
+				c1.gridy = y1;
+				add(extraSpace, c1);
 			}
 			else
 			{
+				int i;
 				//For each safety zone space
-				for (int i = x1; i >= x2; --i)
+				for (i = x1; i >= x2; --i)
 				{				
 					JLabel safeSpace = new JLabel();
 					safeSpace.setMinimumSize(new Dimension(SIDE_LENGTH, SIDE_LENGTH));
@@ -541,7 +620,11 @@ public class GameBoard extends JPanel implements Listener
 					c.gridy = y1;
 
 					add(safeSpace, c);
-				}	
+				}
+				GridBagConstraints c1 = new GridBagConstraints();
+				c1.gridx = i;
+				c1.gridy = y1;
+				add(extraSpace, c1);
 			}
 		}
 	}
@@ -641,7 +724,7 @@ public class GameBoard extends JPanel implements Listener
 					add(safe, c);
 					if(safe.getSafeNextID() != null)
 						safe = gameSystem.getSpace(safe.getSafeNextID());
-				}	
+				}
 			}
 
 		}
@@ -656,6 +739,17 @@ public class GameBoard extends JPanel implements Listener
 	 */
 	private void initializeHome(UUID[] safeStart, Color color, int gridX, int gridY)
 	{
+		//Set "HOME" size and location
+		int homeLength = Space.SIDE_LENGTH * 3;
+		
+		GridBagConstraints c = new GridBagConstraints();
+		int homeGridLength = 3;
+		c.gridwidth = homeGridLength; //FIXME: make static?
+		c.gridheight = homeGridLength; //FIXME: make static?
+		c.gridx = gridX;
+		c.gridy = gridY;
+		
+		//Set top layer transparent "HOME"
 		UUID safeID = null;
 		for(int i = 0; i<safeStart.length; i++) {
 			Space space = gameSystem.getSpace(safeStart[i]);
@@ -669,27 +763,18 @@ public class GameBoard extends JPanel implements Listener
 		UUID id = gameSystem.getSpacesAway(gameSystem.getSpace(safeID), 5);
 		//TODO error handle id = null. Shouldn't come up though.
 		TerminalSpace home = (TerminalSpace) gameSystem.getSpace(id);
-		
-		
-		//TerminalSpace home = new TerminalSpace(null, null, null, TerminalType.HOME);
-		
-		//Set "HOME" size and color
-		int homeLength = Space.SIDE_LENGTH * 3;
 		home.setPreferredSize(new Dimension(homeLength, homeLength));
-		home.setBackground(color);
-		home.setOpaque(true);
-		
-		//Set "HOME" location
-		//FIXME: Padding
-		GridBagConstraints c = new GridBagConstraints();
-		int homeGridLength = 3;
-		c.gridwidth = homeGridLength; //FIXME: make static?
-		c.gridheight = homeGridLength; //FIXME: make static?
-		c.gridx = gridX;
-		c.gridy = gridY;
-		
 		home.addMouseListener(controller); //TODO: Can this be done in the Space class?
-		add(home, c);	
+		add(home, c);
+		
+		//Set lower layer "HOME"
+		JLabel homeLabel = new JLabel();
+		homeLabel.setPreferredSize(new Dimension(homeLength, homeLength));
+		ImageIcon icon = new ImageIcon("images/TerminalImages/" + color + "_Home.png");
+		homeLabel.setIcon(icon);
+		homeLabel.setHorizontalAlignment(JLabel.CENTER);
+		homeLabel.setVerticalAlignment(JLabel.CENTER);
+		add(homeLabel, c);	
 	}
 	
 	/**
