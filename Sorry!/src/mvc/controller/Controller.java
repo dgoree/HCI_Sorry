@@ -193,12 +193,14 @@ public class Controller implements ActionListener, MouseListener
 					+ "START space.";
 			String rules4 =  "  If at any time you can move, you must move, even if "
 					+ "it's to your disadvantage.";
+			String cite = "These rules are the official Hasbro rules, found at https://www.hasbro.com/common/instruct/Sorry.PDF.";
 			
-			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>Object:</Strong>" + rules1 + "</p></html>" + "\n"
-			+ "<html><p style='width:200px;'><Strong>Game Play:</Strong>"
-			+ rules2 + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Jumping and Bumping:</Strong>"
-			+ rules3 + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Note:</Strong>"
-			+ rules4 + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:250px;'><Strong>Object:</Strong>" + rules1 + "</p></html>" + "\n"
+			+ "<html><p style='width:250px;'><Strong>Game Play:</Strong>"
+			+ rules2 + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>Jumping and Bumping:</Strong>"
+			+ rules3 + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>Note:</Strong>"
+			+ rules4 + "</p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" +
+			"<html><p style = 'width:250px;'>" + cite + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
 		}
 		else if(e.getActionCommand().equals(GameFrame.THE_BOARD_COMMAND))
 		{
@@ -212,10 +214,12 @@ public class Controller implements ActionListener, MouseListener
 			String safety = "  Only you many enter your own color safety zone.  All other rules apply.  "
 					+ "No pawn may enter its safety zone by a backward move; however a pawn may move backward out of "
 					+ "its safety zone and on subsequent turns move back into the zone as cards permit.";
-			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>Home:</Strong>" + home + "</p></html>" + "\n"
-					+ "<html><p style='width:200px;'><Strong>Slides:</Strong>"
-					+ slide + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Safety Zones:</Strong>"
-					+ safety + "</p></html>", "Game Board Information", JOptionPane.PLAIN_MESSAGE);
+			String cite = "These rules are the official Hasbro rules, found at https://www.hasbro.com/common/instruct/Sorry.PDF.";
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:250px;'><Strong>Home:</Strong>" + home + "</p></html>" + "\n"
+					+ "<html><p style='width:250px;'><Strong>Slides:</Strong>"
+					+ slide + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>Safety Zones:</Strong>"
+					+ safety + "</p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" +
+							"<html><p style = 'width:250px;'>" + cite + "</p></html>", "Game Board Information", JOptionPane.PLAIN_MESSAGE);
 		}
 		else if(e.getActionCommand().equals(GameFrame.CARD_COMMAND))
 		{
@@ -236,20 +240,22 @@ public class Controller implements ActionListener, MouseListener
 			String sorry = "  Take one pawn from your START, place it on any space that is occupied by any opponent, "
 					+ "and bump that opponent's pawn back to its START.  If there is no pawn on your START or no "
 					+ "opponent's pawn on any space you can move to, you forfeit your move.";
-			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>1:</Strong>" + one + "</p></html>" + "\n"
-					+ "<html><p style='width:200px;'><Strong>2:</Strong>"
-					+ two + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>3:</Strong>"
-					+ three + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>4:</Strong>"
+			String cite = "These rules are the official Hasbro rules, found at https://www.hasbro.com/common/instruct/Sorry.PDF.";
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:250px;'><Strong>1:</Strong>" + one + "</p></html>" + "\n"
+					+ "<html><p style='width:250px;'><Strong>2:</Strong>"
+					+ two + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>3:</Strong>"
+					+ three + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>4:</Strong>"
 					+ four + "</p></html>"+ "\n"
-					+ "<html><p style='width:200px;'><Strong>5:</Strong>"
-					+ five + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>7:</Strong>"
-					+ seven + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>8:</Strong>"
+					+ "<html><p style='width:250px;'><Strong>5:</Strong>"
+					+ five + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>7:</Strong>"
+					+ seven + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>8:</Strong>"
 					+ eight + "</p></html>" + "\n"
-					+ "<html><p style='width:200px;'><Strong>10:</Strong>"
-					+ ten + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>11:</Strong>"
-					+ eleven + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>12:</Strong>"
-					+ twelve + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Sorry!:</Strong>"
-					+ sorry + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
+					+ "<html><p style='width:250px;'><Strong>10:</Strong>"
+					+ ten + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>11:</Strong>"
+					+ eleven + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>12:</Strong>"
+					+ twelve + "</p></html>" + "\n" + "<html><p style='width:250px;'><Strong>Sorry!:</Strong>"
+					+ sorry + "</p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" + "<html><p style='width:250px;'></p></html>" + "\n" +
+							"<html><p style = 'width:250px;'>" + cite + "</p></html>", "Card Rules", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
