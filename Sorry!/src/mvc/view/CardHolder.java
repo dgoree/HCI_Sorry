@@ -55,19 +55,21 @@ public class CardHolder extends JLabel implements Listener
 		this.setLayout(new GridLayout(1, 1));
 		
 		drawCard = new JButton("Click to draw" + "\n" +"a card");
-		drawCard.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
-		drawCard.setText("<html><center>" +"Select New Game :)"+"</center></html>");
+		Font font = new Font("Helvetica Neue", Font.BOLD, 25);
+		drawCard.setFont(font);
+		drawCard.setText("<html><center>" +"Click to Start a New Game"+"</center></html>");
 		drawCard.setBackground(new Color(153, 214, 255));
 		drawCard.setOpaque(true);
 		drawCard.setBorderPainted(false);
 		drawCard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		drawCard.setActionCommand(DRAW_CARD_COMMAND);
+		drawCard.setActionCommand(GameFrame.NEW_GAME_COMMAND);
 		drawCard.addActionListener(controller);
 		this.add(drawCard);
 	}
 	
 	public void updated()
 	{		
+		drawCard.setActionCommand(DRAW_CARD_COMMAND);
 		//don't update if a player needs to move a second token
 		if(gameSystem.isSecondSevenMove()) {
 			return;
