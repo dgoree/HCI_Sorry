@@ -94,7 +94,6 @@ public class Controller implements ActionListener, MouseListener
 				if(currentPlayerMoves.isEmpty())
 				{
 					//Alert player
-					System.out.println("No possible moves."); //debug print TODO: remove
 					gameSystem.setNoPossibleMoves(true);
 					
 					//FIXME: Does this need to be in the View? Or is it ok in the Controller?
@@ -102,8 +101,6 @@ public class Controller implements ActionListener, MouseListener
 					
 					//Advance turn
 					advanceTurn();
-					
-					System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove
 				}	
 			}
 			else
@@ -118,9 +115,6 @@ public class Controller implements ActionListener, MouseListener
 				//Start new game
 				gameSystem.setChangeNameMenu();
 				gameSystem.newGame();
-				System.out.println("start a new game"); //debug print. TODO: remove
-				
-				//TODO: remove all icons from the board 
 				
 				//Initialize current player to first player
 				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
@@ -132,13 +126,37 @@ public class Controller implements ActionListener, MouseListener
 				}
 				currentPlayerMoves.clear(); //No moves before card has been drawn
 				
-				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")"); //debug print TODO: remove	
+				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");
 			}
 			else
 			{
 				//TODO confirm they want to restart the game.
+				
+				//Remove all token icons currently on game board
+				for (Player player : gameSystem.getPlayers())
+				{
+					for (Token token : player.getTokens())
+					{
+						gameSystem.getSpace(token.getSpaceID()).setIcon(null);
+						gameSystem.getSpace(token.getSpaceID()).setText(null);
+					}
+				}
+				
+				//Start new game
 				gameSystem.setChangeNameMenu();
 				gameSystem.newGame(); 
+				
+				//Initialize current player to first player
+				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
+				currentPlayerTokens = currentPlayer.getTokens();
+				currentPlayerTokenIDs = new UUID[currentPlayerTokens.length];
+				for(int i = 0; i < currentPlayerTokens.length; i++)
+				{
+					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
+				}
+				currentPlayerMoves.clear(); //No moves before card has been drawn
+				
+				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");	
 			}
 
 		}
