@@ -148,17 +148,79 @@ public class Controller implements ActionListener, MouseListener
 			System.out.println("game ended"); //debug print. TODO: remove
 			System.exit(0);
 		}
-
-		else if(e.getActionCommand().equals(GameFrame.HELP_COMMAND))
+		else if(e.getActionCommand().equals(GameFrame.GENERAL_RULES))
 		{
-			String rules = "I'll come back and add in the actual "
-					+ "rules... maybe a scroll bar if they're long enough... fun things like that.";
+			String rules1 ="  To be the first player to get all four of your pawns " +
+					"from your color START to your color HOME";
+			String rules2 = "  The red player moves first.  Movement is clockwise around the "
+					+ "board (unless instructed otherwise!) and the play passes clockwise."
+					+ " Only a 1 card or a 2 card can move you out of START.  If it's your"
+					+ " first turn and you do not draw a card that lets you "
+					+ "start a pawn out, you forfeit (skip) your turn.  On all turns you "
+					+ "draw a card and move accordingly if you can.";
+			String rules3 = "  You may jump over your own or another player's "
+					+ "pawn that's in your way, counting it as one space.  BUT if you land on a space"
+					+ "that's already occupied by a pawn, bump that pawn back to its own color "
+					+ "START space.";
+			String rules4 =  "  If at any time you can move, you must move, even if "
+					+ "it's to your disadvantage.";
 			
-			JTextArea text = new JTextArea(rules);
-			text.setLineWrap(true);
-			text.setWrapStyleWord(true);
-			JScrollPane pane = new JScrollPane(text);
-			JOptionPane.showMessageDialog(null, "<html><p style='width:200px;'>" + rules + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>Object:</Strong>" + rules1 + "</p></html>" + "\n"
+			+ "<html><p style='width:200px;'><Strong>Game Play:</Strong>"
+			+ rules2 + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Jumping and Bumping:</Strong>"
+			+ rules3 + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Note:</Strong>"
+			+ rules4 + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
+		}
+		else if(e.getActionCommand().equals(GameFrame.THE_BOARD_COMMAND))
+		{
+			String home = "  You must bring all four of your pawns into HOME by "
+					+ "exact count!  Once HOME, do not move that pawn again for the rest of the game.";
+			String slide = "  Regardless of which card sent you there, any time you land by exact "
+					+ "count on the triangle at the beginning of a slide that is not your own "
+					+ "color, slide ahead to the end and bump any pawns in your way--including your own!--"
+					+ " back to their own START spaces.  If you land on a slide of your own color, don't "
+					+ "slide.  Just stay on the triangle.";
+			String safety = "  Only you many enter your own color safety zone.  All other rules apply.  "
+					+ "No pawn may enter its safety zone by a backward move; however a pawn may move backward out of "
+					+ "its safety zone and on subsequent turns move back into the zone as cards permit.";
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>Home:</Strong>" + home + "</p></html>" + "\n"
+					+ "<html><p style='width:200px;'><Strong>Slides:</Strong>"
+					+ slide + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Safety Zones:</Strong>"
+					+ safety + "</p></html>", "Game Board Information", JOptionPane.PLAIN_MESSAGE);
+		}
+		else if(e.getActionCommand().equals(GameFrame.CARD_COMMAND))
+		{
+			String one = " Either start a pawn out OR move one pawn forward 1 space.";
+			String two = " Either start a pawn out OR move one pawn forward 2 spaces.  Whichever you "
+					+ "do--or even if you couldn't move--DRAW AGAIN and move accordingly.";
+			String three = "  Move one pawn forward 3 spaces.";
+			String four = "  Move one pawn backwards 4 spaces.";
+			String five = "  Move one pawn forward 5 spaces.";
+			String seven = "  Either move one pawn forward 7 spaces OR split the forward move between any two "
+					+ "pawns.  You may not use 7 to start a pawn, and if you use part of the 7 to get a "
+					+ "pawn HOME, you must be able to use the balance of the move for another pawn.";
+			String eight = "  Move one pawn forward 8 spaces.";
+			String ten = "  Either move one pawn forward 10 spaces OR move one pawn backwards 1 space.";
+			String eleven = "  Move one pawn forward 11 spaces OR switch any one of your pawns iwht one of any opponent's."
+					+ "  If your switch lands you on a triangle at the beginning of anohter player's slide, slide to the end!";
+			String twelve = "  Move one pawn forward 12 spaces.";
+			String sorry = "  Take one pawn from your START, place it on any space that is occupied by any opponent, "
+					+ "and bump that opponent's pawn back to its START.  If there is no pawn on your START or no "
+					+ "opponent's pawn on any space you can move to, you forfeit your move.";
+			JOptionPane.showMessageDialog(null,  "<html><p style='width:200px;'><Strong>1:</Strong>" + one + "</p></html>" + "\n"
+					+ "<html><p style='width:200px;'><Strong>2:</Strong>"
+					+ two + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>3:</Strong>"
+					+ three + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>4:</Strong>"
+					+ four + "</p></html>"+ "\n"
+					+ "<html><p style='width:200px;'><Strong>5:</Strong>"
+					+ five + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>7:</Strong>"
+					+ seven + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>8:</Strong>"
+					+ eight + "</p></html>" + "\n"
+					+ "<html><p style='width:200px;'><Strong>10:</Strong>"
+					+ ten + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>11:</Strong>"
+					+ eleven + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>12:</Strong>"
+					+ twelve + "</p></html>" + "\n" + "<html><p style='width:200px;'><Strong>Sorry!:</Strong>"
+					+ sorry + "</p></html>", "Game Play Information", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
