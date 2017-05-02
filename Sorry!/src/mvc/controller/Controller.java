@@ -171,9 +171,11 @@ public class Controller implements ActionListener, MouseListener
 		}
 		else if(e.getActionCommand().equals(GameFrame.QUIT_GAME_COMMAND))
 		{
-			//TODO quit game elegantly with possibility of starting a new one without closing the program?
-			System.out.println("game ended"); //debug print. TODO: remove
-			System.exit(0);
+			int quitGame = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
+			if(quitGame == JOptionPane.YES_OPTION)
+			{
+				System.exit(0);
+			}
 		}
 		else if(e.getActionCommand().equals(GameFrame.GENERAL_RULES))
 		{
