@@ -292,6 +292,8 @@ public class Controller implements ActionListener, MouseListener
 
 			//Show token's possible moves
 			selectedTokenMoves = selectedToken.getMoves();
+			if(selectedTokenMoves == null)
+				return;
 			for(UUID move : selectedTokenMoves)
 			{
 				gameSystem.getSpace(move).setBackground(Color.MAGENTA);
@@ -302,7 +304,7 @@ public class Controller implements ActionListener, MouseListener
 		else
 		{	
 			//Check if user clicked a legal destination space for the selected token
-			if (!selectedTokenMoves.isEmpty() && selectedTokenMoves.contains(spaceClicked.getId()))
+			if (selectedTokenMoves != null && !selectedTokenMoves.isEmpty() && selectedTokenMoves.contains(spaceClicked.getId()))
 			{				
 				//Save current location of token
 				UUID tokenPrevLocation = selectedToken.getSpaceID();
