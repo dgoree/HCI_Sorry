@@ -179,9 +179,7 @@ public class Controller implements ActionListener, MouseListener
 		//If player clicked a space occupied by own token (except home)
 		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()) && !spaceClicked.isHome())
 		{
-			//reset magenta spaces to white if necessary
-			//FIXME: need to distinguish between regular spaces and safety zones
-			//FIXME: also, resetting the color covers up slides.
+			//reset magenta spaces if necessary
 			for(UUID id: magentaSpaces) {
 				gameSystem.getSpace(id).setBackground((new JLabel()).getBackground());
 				gameSystem.getSpace(id).setOpaque(false);
@@ -225,9 +223,7 @@ public class Controller implements ActionListener, MouseListener
 					gameSystem.getSpace(tokenPrevLocation).setIcon(null);
 				}
 				
-				//reset magenta spaces to white
-				//FIXME: need to distinguish between regular spaces and safety zones
-				//FIXME: also, resetting the color covers up slides.
+				//reset magenta spaces
 				for(UUID id: magentaSpaces) {
 					gameSystem.getSpace(id).setBackground((new JLabel()).getBackground());
 					gameSystem.getSpace(id).setOpaque(false);
