@@ -2,15 +2,20 @@ package mvc.view;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
 import mvc.controller.Controller;
 import mvc.model.GameSystem;
@@ -25,8 +30,11 @@ public class GameFrame extends JFrame implements Listener
 {
 	public static final String NEW_GAME_COMMAND = "new game";
 	public static final String QUIT_GAME_COMMAND = "quit game";
-	public static final String HELP_COMMAND = "help";
-	private static final int MIN_WIDTH = 700;
+	//public static final String HELP_COMMAND = "help";
+	public static final String GENERAL_RULES = "general";
+	public static final String THE_BOARD_COMMAND = "board";
+	public static final String CARD_COMMAND = "cards";
+	static final int MIN_WIDTH = 700;
 	private static final int MIN_HEIGHT = 700;
 	private final GameSystem gameSystem;
 	
@@ -60,15 +68,46 @@ public class GameFrame extends JFrame implements Listener
 		
 		//Create menu bar and add to window
 		JMenuBar menuBar = new JMenuBar();
-		JMenuItem newGame = new JMenuItem("New Game");
-		JMenuItem quitGame = new JMenuItem("Quit Game");
-		JMenuItem help = new JMenuItem("Help");
+		JButton newGame = new JButton("New Game");
+		JButton quitGame = new JButton("Quit Game");
+		JToggleButton help = new JToggleButton("Help...");
 		newGame.setActionCommand(NEW_GAME_COMMAND);
 		quitGame.setActionCommand(QUIT_GAME_COMMAND);
-		help.setActionCommand(HELP_COMMAND);
+		//help.setActionCommand(HELP_COMMAND);
 		newGame.addActionListener(controller);
 		quitGame.addActionListener(controller);
-		help.addActionListener(controller);
+		//help.addActionListener(controller);
+		
+		JPopupMenu helpOptions = new JPopupMenu();
+		
+		JMenuItem general = new JMenuItem("General Game Play");
+		general.setActionCommand(GENERAL_RULES);
+		general.addActionListener(controller);
+		helpOptions.add(general);
+		
+		JMenuItem board = new JMenuItem("The Board");
+		board.setActionCommand(THE_BOARD_COMMAND);
+		board.addActionListener(controller);
+		helpOptions.add(board);
+		
+		JMenuItem cards = new JMenuItem("The Cards");
+		cards.setActionCommand(CARD_COMMAND);
+		cards.addActionListener(controller);
+		helpOptions.add(cards);
+		
+		
+		help.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ev){
+				JToggleButton b = help;
+				if (b.isSelected()) {
+					helpOptions.show(b,  0,  b.getBounds().height);
+				} else {
+					helpOptions.setVisible(false);
+				}
+			}
+		});
+
 		menuBar.add(newGame);
 		menuBar.add(quitGame);
 		menuBar.add(help);
