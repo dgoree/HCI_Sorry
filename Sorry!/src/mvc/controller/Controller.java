@@ -171,9 +171,11 @@ public class Controller implements ActionListener, MouseListener
 		}
 		else if(e.getActionCommand().equals(GameFrame.QUIT_GAME_COMMAND))
 		{
-			//TODO quit game elegantly with possibility of starting a new one without closing the program?
-			System.out.println("game ended"); //debug print. TODO: remove
-			System.exit(0);
+			int quitGame = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
+			if(quitGame == JOptionPane.YES_OPTION)
+			{
+				System.exit(0);
+			}
 		}
 		else if(e.getActionCommand().equals(GameFrame.GENERAL_RULES))
 		{
@@ -228,8 +230,8 @@ public class Controller implements ActionListener, MouseListener
 					+ "pawn HOME, you must be able to use the balance of the move for another pawn.";
 			String eight = "  Move one pawn forward 8 spaces.";
 			String ten = "  Either move one pawn forward 10 spaces OR move one pawn backwards 1 space.";
-			String eleven = "  Move one pawn forward 11 spaces OR switch any one of your pawns iwht one of any opponent's."
-					+ "  If your switch lands you on a triangle at the beginning of anohter player's slide, slide to the end!";
+			String eleven = "  Move one pawn forward 11 spaces OR switch any one of your pawns with one of any opponent's."
+					+ "  If your switch lands you on a triangle at the beginning of another player's slide, slide to the end!";
 			String twelve = "  Move one pawn forward 12 spaces.";
 			String sorry = "  Take one pawn from your START, place it on any space that is occupied by any opponent, "
 					+ "and bump that opponent's pawn back to its START.  If there is no pawn on your START or no "
