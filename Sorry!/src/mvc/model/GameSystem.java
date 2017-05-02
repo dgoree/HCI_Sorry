@@ -258,7 +258,7 @@ public class GameSystem {
 		
 		//remove any players occupying destination space
 		evict(destination);
-		//hashMap.get(destination).setIcon(null); //Commenting this out solves the hidden token at end of slide issue
+		hashMap.get(destination).setIcon(null);
 		//perform slide if necessary, changing destination
 		UUID slideToID = hashMap.get(destination).getSlideToID(); 
 		if((slideToID != null) && (hashMap.get(destination).getColor() != Color.values()[turn])) {
@@ -266,7 +266,7 @@ public class GameSystem {
 				//remove tokens and their icons from the slide
 				destination = hashMap.get(destination).getNextID();
 				evict(destination);
-				//hashMap.get(destination).setIcon(null); //Commenting this out solves the hidden token at end of slide issue
+				hashMap.get(destination).setIcon(null);
 			}
 		}
 		//move token to proper space
