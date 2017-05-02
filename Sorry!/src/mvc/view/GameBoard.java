@@ -797,6 +797,7 @@ public class GameBoard extends JPanel implements Listener
 				space.setIcon(icon);
 				space.setHorizontalAlignment(JLabel.CENTER);
 				space.setVerticalAlignment(JLabel.CENTER);
+				setComponentZOrder(space, 0);
 			}	
 		}	
 	}
