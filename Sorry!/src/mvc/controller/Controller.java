@@ -33,7 +33,7 @@ import mvc.model.GameSystem;
 public class Controller implements ActionListener, MouseListener
 {
 	private final GameSystem gameSystem;
-	
+
 	private Player currentPlayer;
 	private Token currentPlayerTokens[];
 	private UUID currentPlayerTokenIDs[];
@@ -41,12 +41,12 @@ public class Controller implements ActionListener, MouseListener
 	private Token selectedToken;
 	private ArrayList<UUID> selectedTokenMoves = new ArrayList<UUID>();
 	private ArrayList<UUID> magentaSpaces = new ArrayList<UUID>();
-	
+
 	public Controller(final GameSystem gameSystem)
 	{
 		this.gameSystem = gameSystem;
 	}
-	
+
 	/**
 	 * Advances turn to next player and allows player to draw a card
 	 */
@@ -74,12 +74,12 @@ public class Controller implements ActionListener, MouseListener
 			{
 				//They clicked a button to draw a card.
 				gameSystem.drawCard();
-				
+
 				int debug = gameSystem.getCardNum();
 				if(debug == 0) {
 					int stop = 0;
 				}
-				
+
 				//Get all possible moves across each token for current player
 				for(Token token : currentPlayerTokens)
 				{
@@ -89,16 +89,16 @@ public class Controller implements ActionListener, MouseListener
 						currentPlayerMoves.add(move);
 					}
 				}
-				
+
 				//If current player has no possible moves, alert player then advance turn
 				if(currentPlayerMoves.isEmpty())
 				{
 					//Alert player
 					gameSystem.setNoPossibleMoves(true);
-					
+
 					//FIXME: Does this need to be in the View? Or is it ok in the Controller?
 					JOptionPane.showMessageDialog(null, "You have no possible moves.", "Forfeit Your Turn", JOptionPane.PLAIN_MESSAGE);
-					
+
 					//Advance turn
 					advanceTurn();
 				}	
@@ -115,7 +115,7 @@ public class Controller implements ActionListener, MouseListener
 				//Start new game
 				gameSystem.setChangeNameMenu();
 				gameSystem.newGame();
-				
+
 				//Initialize current player to first player
 				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
 				currentPlayerTokens = currentPlayer.getTokens();
@@ -129,32 +129,35 @@ public class Controller implements ActionListener, MouseListener
 			else
 			{
 				//TODO confirm they want to restart the game.
-				
-				//Remove all token icons currently on game board
-				for (Player player : gameSystem.getPlayers())
+				int newGame = JOptionPane.showConfirmDialog(null, "Are you sure you want to start a new game?", "New Game", JOptionPane.YES_NO_OPTION);
+				if(newGame == JOptionPane.YES_OPTION)
 				{
-					for (Token token : player.getTokens())
+					//Remove all token icons currently on game board				
+					for (Player player : gameSystem.getPlayers())
 					{
-						gameSystem.getSpace(token.getSpaceID()).setIcon(null);
-						gameSystem.getSpace(token.getSpaceID()).setText(null);
+						for (Token token : player.getTokens())
+						{
+							gameSystem.getSpace(token.getSpaceID()).setIcon(null);
+							gameSystem.getSpace(token.getSpaceID()).setText(null);
+						}
 					}
+
+					//Start new game
+					gameSystem.setChangeNameMenu();
+					gameSystem.newGame(); 
+
+					//Initialize current player to first player
+					currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
+					currentPlayerTokens = currentPlayer.getTokens();
+					currentPlayerTokenIDs = new UUID[currentPlayerTokens.length];
+					for(int i = 0; i < currentPlayerTokens.length; i++)
+					{
+						currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
+					}
+					currentPlayerMoves.clear(); //No moves before card has been drawn
+
+					System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");
 				}
-				
-				//Start new game
-				gameSystem.setChangeNameMenu();
-				gameSystem.newGame(); 
-				
-				//Initialize current player to first player
-				currentPlayer = gameSystem.getPlayers().get(gameSystem.getTurn());
-				currentPlayerTokens = currentPlayer.getTokens();
-				currentPlayerTokenIDs = new UUID[currentPlayerTokens.length];
-				for(int i = 0; i < currentPlayerTokens.length; i++)
-				{
-					currentPlayerTokenIDs[i] = currentPlayerTokens[i].getSpaceID();
-				}
-				currentPlayerMoves.clear(); //No moves before card has been drawn
-				
-				System.out.println("Player " + gameSystem.getTurn() + "'s Turn (" + currentPlayer.getColor() + ")");	
 			}
 
 		}
@@ -169,7 +172,7 @@ public class Controller implements ActionListener, MouseListener
 		{
 			String rules = "I'll come back and add in the actual "
 					+ "rules... maybe a scroll bar if they're long enough... fun things like that.";
-			
+
 			JTextArea text = new JTextArea(rules);
 			text.setLineWrap(true);
 			text.setWrapStyleWord(true);
@@ -188,10 +191,10 @@ public class Controller implements ActionListener, MouseListener
 	public void mouseClicked(MouseEvent e) 
 	{
 		Space spaceClicked = (Space) e.getSource(); //Only added MouseListeners to spaces
-		
+
 		//Convert array to list
 		List<UUID> currentPlayerTokenIDsList = Arrays.asList(currentPlayerTokenIDs);
-			
+
 		//If player clicked a space occupied by own token (except home)
 		if (currentPlayerTokenIDsList.contains(spaceClicked.getId()) && !spaceClicked.isHome())
 		{
@@ -202,7 +205,7 @@ public class Controller implements ActionListener, MouseListener
 				gameSystem.getSpace(id).getParent().setComponentZOrder(gameSystem.getSpace(id), 0);
 			}
 			magentaSpaces.clear();
-			
+
 			//Get corresponding token
 			for(Token token : currentPlayerTokens)
 			{
@@ -212,7 +215,7 @@ public class Controller implements ActionListener, MouseListener
 					break;
 				}
 			}
-			
+
 			//Show token's possible moves
 			selectedTokenMoves = selectedToken.getMoves();
 			for(UUID move : selectedTokenMoves)
@@ -229,16 +232,16 @@ public class Controller implements ActionListener, MouseListener
 			{				
 				//Save current location of token
 				UUID tokenPrevLocation = selectedToken.getSpaceID();
-				
+
 				//Move token to destination space
 				gameSystem.moveToken(selectedToken, spaceClicked.getId());
-				
+
 				//Remove icon from token's previous location
 				//Unless that location is start and there are still other tokens there
 				if(!Arrays.asList(gameSystem.getStartIDs()).contains(tokenPrevLocation) || currentPlayer.numTokensInStart() == 0) {
 					gameSystem.getSpace(tokenPrevLocation).setIcon(null);
 				}
-				
+
 				//reset magenta spaces
 				for(UUID id: magentaSpaces) {
 					gameSystem.getSpace(id).setBackground((new JLabel()).getBackground());
@@ -247,7 +250,7 @@ public class Controller implements ActionListener, MouseListener
 				}
 				magentaSpaces.clear();
 				selectedTokenMoves.clear();
-				
+
 				//End game or advance turn
 				if(!gameSystem.isGameInProgress()) {
 					JOptionPane.showMessageDialog(null, gameSystem.getPlayerName()+" won!", "Game Over", JOptionPane.PLAIN_MESSAGE);
